@@ -1,0 +1,42 @@
+{
+  "weight_decay": 1e-8,
+
+  "learning_rate":0.0001,
+  "learning_rate_decay_factor":0.6,
+  "moving_average_decay": 0.8,
+  "num_epoch_per_decay": 5,
+  "momentum":0.9,
+
+  "random_crop_scale": 0.8,
+
+  "is_training": true,
+  "valid_freq":1,
+
+  "num_epochs": 500,
+  "num_gpus": 2,
+  "availiable_gpus": "2，3",
+  "num_train_examples_per_epoch":4350,
+  "num_val_examples_per_epoch":900,
+
+  "excel_path":"./pasi.xlsx",
+  "train_txt_file":"./txt/train.txt",
+  "val_txt_file": "./txt/val.txt",
+
+  "log_device_placement": true,
+
+  "history_file":"./experiments/history.txt",
+  "summary_dir": "./experiments/summary",
+  "checkpoint_dir": "./experiments/checkpoints",
+  "predict_dir":"./experiments/results",
+
+  "batch_size": 1,
+  "accu_num": 16,
+
+  "gpu_memory_fraction": 0.96,
+
+  "img_height": 800,
+  "img_width": 1024,
+  "num_channel":3,
+
+  "load_model": false
+}
