@@ -5,26 +5,29 @@ from keras.models import Model
 from keras.layers import Input, Flatten, Dense, Dropout, Lambda, Conv2D, Add, GlobalAveragePooling2D, Multiply, \
     Concatenate, MaxPooling2D
 from keras import regularizers
-
 from SR_Module import score_refine_module
 
 
 def combine_siamese_results(output_score_map_a, output_score_map_b):
     # 该函数输出5*3个值，A网络的5个分数，B网络的5个分数以及AB两网络的5个分数差距
 
+    global weight_decay
+
     # score A:
     A_vector = Concatenate()([GlobalAveragePooling2D()(output_score_map_a[i]) for i in range(5)])
-    A_score = Dense(5, activation=None, name="scoreA", kernel_regularizer=regularizers.l2(weight_decay))(A_vector)
+    A_score = Dense(5, activation=None, name="scoreA", kernel_initializer='he_normal',
+                    kernel_regularizer=regularizers.l2(weight_decay))(A_vector)
 
     # score B:
     B_vector = Concatenate()([GlobalAveragePooling2D()(output_score_map_b[i]) for i in range(5)])
-    B_score = Dense(5, activation=None, name="scoreB", kernel_regularizer=regularizers.l2(weight_decay))(B_vector)
+    B_score = Dense(5, activation=None, name="scoreB", kernel_initializer='he_normal',
+                    kernel_regularizer=regularizers.l2(weight_decay))(B_vector)
 
     # score gap:
     siamese_map = [Add()([output_score_map_a[i], output_score_map_b[i]]) for i in range(5)]
     siamese_vector = Concatenate()([GlobalAveragePooling2D()(siamese_map[i]) for i in range(5)])
-    siamese_score = Dense(5, activation=None, name="scoreSiam", kernel_regularizer=regularizers.l2(weight_decay))(
-        siamese_vector)
+    siamese_score = Dense(5, activation=None, name="scoreSiam", kernel_initializer='he_normal',
+                          kernel_regularizer=regularizers.l2(weight_decay))(siamese_vector)
 
     return A_score, B_score, siamese_score
 
@@ -33,10 +36,12 @@ def PSENet():
     global height, width, weight_decay
     # define single network
     with tf.device('/cpu:0'):
+
         image_input = Input(shape=(800, 1024, 3), name="single_input")
 
         with tf.variable_scope("resnet50", reuse=tf.AUTO_REUSE):
-            base_model = ResNet50(weights=None, input_shape=(800, 1024, 3), input_tensor=image_input, include_top=False)
+            base_model = ResNet50(weights="imagenet", input_shape=(800, 1024, 3), input_tensor=image_input,
+                                  include_top=False)
 
             for layer in base_model.layers:
                 if isinstance(layer, keras.layers.DepthwiseConv2D):
@@ -59,22 +64,18 @@ def PSENet():
             p5 = base_model.get_layer("activation_49").output
             p5_score_map, p5_locate_map = score_refine_module(p5, "p5")
 
-            p6 = Conv2D(256, (1, 1), padding='same', activation="relu",
-                        kernel_regularizer=regularizers.l2(weight_decay))(
-                base_model.output)
-            p6 = Conv2D(256, (3, 3), padding='same', activation="relu",
-                        kernel_regularizer=regularizers.l2(weight_decay))(
-                p6)
-            p6 = MaxPooling2D(pool_size=(2, 2), strides=None, padding='same', data_format=None)(p6)
+            p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(weight_decay))(base_model.output)
+            p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(weight_decay))(p6)
+            p6 = MaxPooling2D(pool_size=(2, 2), padding='same')(p6)
             p6_score_map, p6_locate_map = score_refine_module(p6, "p6")
 
-            p7 = Conv2D(256, (1, 1), padding='same', activation="relu",
-                        kernel_regularizer=regularizers.l2(weight_decay))(
-                p6)
-            p7 = Conv2D(256, (3, 3), padding='same', activation="relu",
-                        kernel_regularizer=regularizers.l2(weight_decay))(
-                p7)
-            p7 = MaxPooling2D(pool_size=(2, 2), strides=None, padding='same', data_format=None)(p7)
+            p7 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(weight_decay))(p6)
+            p7 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(weight_decay))(p7)
+            p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
             p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
 
     single_model = Model(inputs=image_input,

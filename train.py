@@ -1,25 +1,17 @@
 import os
 from keras.utils import multi_gpu_model
 from keras import callbacks
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 
 from utils.parse import process_config
 from utils.getArgs import getArgs
-
-from PIL import ImageFile
-
-ImageFile.LOAD_TRUNCATED_IMAGES = True
-import matplotlib.pyplot as plt
-
-plt.switch_backend('agg')
-
 from model import PSENet
-
 from data_generator import train_generator, valid_generator
-
 from loss_metric import score_loss, siam_loss, locate_loss, score_metric, locate_metric
-
 from self_callbacks import MyEarlyStop
-
 from acc_opt import SGDAccumulate
 
 # 模型参数配置
