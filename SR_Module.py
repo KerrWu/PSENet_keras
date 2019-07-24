@@ -1,10 +1,9 @@
 import tensorflow as tf
 from keras.layers import Conv2D, Add, Multiply
 from keras import regularizers
-
+from global_var import myModelConfig
 
 def score_refine_module(input_feature_map, map_name=None):
-    global myModelConfig
 
     with tf.variable_scope("score_refine_module", reuse=tf.AUTO_REUSE):
         x = Conv2D(256, (1, 1), activation="relu", kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(input_feature_map)

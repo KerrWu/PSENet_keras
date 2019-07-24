@@ -2,6 +2,7 @@ import numpy as np
 import os
 from PIL import Image, ImageEnhance
 import copy
+from global_var import myModelConfig
 
 
 def cal_distance(x1, x2, y1, y2):
@@ -244,8 +245,6 @@ def train_data_preprocessing(origin_img, gt_box):
 def train_generator():
     import openpyxl
     import re
-
-    global myModelConfig
 
     excel_dir = myModelConfig.excel_path
     wb = openpyxl.load_workbook(excel_dir)
@@ -530,8 +529,6 @@ def train_generator():
 def valid_generator():
     import openpyxl
     import re
-
-    global myModelConfig
 
     # excel_dir = os.path.join(myModelConfig.data_root, "pasi.xlsx")
     excel_dir = "./pasi.xlsx"

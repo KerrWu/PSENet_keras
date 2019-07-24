@@ -6,12 +6,10 @@ from keras.layers import Input, Flatten, Dense, Dropout, Lambda, Conv2D, Add, Gl
     Concatenate, MaxPooling2D
 from keras import regularizers
 from SR_Module import score_refine_module
-
+from global_var import myModelConfig
 
 def combine_siamese_results(output_score_map_a, output_score_map_b):
     # 该函数输出5*3个值，A网络的5个分数，B网络的5个分数以及AB两网络的5个分数差距
-
-    global myModelConfig
 
     # score A:
     A_vector = Concatenate()([GlobalAveragePooling2D()(output_score_map_a[i]) for i in range(5)])

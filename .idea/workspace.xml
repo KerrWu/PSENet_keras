@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a1751443-34a3-4c71-8c2e-04277b1f5652" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SR_Module.py" afterPath="$PROJECT_DIR$/SR_Module.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_generator.py" afterPath="$PROJECT_DIR$/data_generator.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model.py" afterPath="$PROJECT_DIR$/model.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/train.py" afterPath="$PROJECT_DIR$/train.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,8 +34,8 @@
       <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="31" column="42" lean-forward="true" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
+            <state relative-caret-position="253">
+              <caret line="11" column="48" lean-forward="false" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="48" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -42,10 +46,22 @@
       <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="33" column="16" lean-forward="true" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+            <state relative-caret-position="184">
+              <caret line="8" column="36" lean-forward="false" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="36" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="global_var.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/global_var.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="138">
+              <caret line="6" column="4" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -54,17 +70,18 @@
       <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="504" column="48" lean-forward="true" selection-start-line="504" selection-start-column="46" selection-end-line="504" selection-end-column="48" />
+            <state relative-caret-position="28">
+              <caret line="4" column="36" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="36" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#117#244#0" expanded="false" />
-                <element signature="e#285#353#0" expanded="false" />
-                <element signature="e#438#1671#0" expanded="false" />
-                <element signature="e#1713#2303#0" expanded="false" />
-                <element signature="e#2360#3748#0" expanded="false" />
-                <element signature="e#3805#7110#0" expanded="false" />
-                <element signature="e#17667#26373#0" expanded="false" />
+                <element signature="e#154#281#0" expanded="false" />
+                <element signature="e#322#390#0" expanded="false" />
+                <element signature="e#475#1708#0" expanded="false" />
+                <element signature="e#1750#2340#0" expanded="false" />
+                <element signature="e#2397#3785#0" expanded="false" />
+                <element signature="e#3842#7147#0" expanded="false" />
+                <element signature="e#7177#17648#0" expanded="false" />
+                <element signature="e#17678#26358#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -73,7 +90,7 @@
       <file leaf-file-name="self_callbacks.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/self_callbacks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="452">
+            <state relative-caret-position="-968">
               <caret line="38" column="31" lean-forward="true" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
@@ -105,16 +122,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="acc_opt.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/acc_opt.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -127,11 +134,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SR_Module.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SR_Module.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SR_Module.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-409">
-              <caret line="11" column="21" lean-forward="true" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+            <state relative-caret-position="92">
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -175,13 +182,14 @@
         <option value="$PROJECT_DIR$/loss.py" />
         <option value="$PROJECT_DIR$/train_model.py" />
         <option value="$PROJECT_DIR$/acc_opt.py" />
-        <option value="$PROJECT_DIR$/data_generator.py" />
         <option value="$PROJECT_DIR$/loss_metric.py" />
         <option value="$PROJECT_DIR$/self_callbacks.py" />
         <option value="$PROJECT_DIR$/config/config.json" />
+        <option value="$PROJECT_DIR$/global.py" />
         <option value="$PROJECT_DIR$/train.py" />
-        <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/SR_Module.py" />
+        <option value="$PROJECT_DIR$/model.py" />
+        <option value="$PROJECT_DIR$/data_generator.py" />
       </list>
     </option>
   </component>
@@ -527,8 +535,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/build_model.py" />
-    <entry file="file://$USER_HOME$/Documents/Anaconda/anaconda/lib/python3.6/site-packages/tensorflow/python/framework/ops.py" />
     <entry file="file://$PROJECT_DIR$/utils/layers.py" />
     <entry file="file://$PROJECT_DIR$/models/multi_gpu_unet.py" />
     <entry file="file://$PROJECT_DIR$/pasi_model2.py" />
@@ -630,33 +636,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="504" column="48" lean-forward="true" selection-start-line="504" selection-start-column="46" selection-end-line="504" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#117#244#0" expanded="false" />
-            <element signature="e#285#353#0" expanded="false" />
-            <element signature="e#438#1671#0" expanded="false" />
-            <element signature="e#1713#2303#0" expanded="false" />
-            <element signature="e#2360#3748#0" expanded="false" />
-            <element signature="e#3805#7110#0" expanded="false" />
-            <element signature="e#17667#26373#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/self_callbacks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="38" column="31" lean-forward="true" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/config.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="458">
@@ -665,32 +644,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train.py">
+    <entry file="file://$PROJECT_DIR$/global.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="33" column="16" lean-forward="true" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+        <state relative-caret-position="276">
+          <caret line="12" column="18" lean-forward="false" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SR_Module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/self_callbacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-968">
+          <caret line="38" column="31" lean-forward="true" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="31" column="42" lean-forward="true" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
+        <state relative-caret-position="253">
+          <caret line="11" column="48" lean-forward="false" selection-start-line="11" selection-start-column="48" selection-end-line="11" selection-end-column="48" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SR_Module.py">
+    <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-409">
-          <caret line="11" column="21" lean-forward="true" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        <state relative-caret-position="184">
+          <caret line="8" column="36" lean-forward="false" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="36" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28">
+          <caret line="4" column="36" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#154#281#0" expanded="false" />
+            <element signature="e#322#390#0" expanded="false" />
+            <element signature="e#475#1708#0" expanded="false" />
+            <element signature="e#1750#2340#0" expanded="false" />
+            <element signature="e#2397#3785#0" expanded="false" />
+            <element signature="e#3842#7147#0" expanded="false" />
+            <element signature="e#7177#17648#0" expanded="false" />
+            <element signature="e#17678#26358#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/global_var.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="4" lean-forward="true" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
           </folding>
         </state>
       </provider>

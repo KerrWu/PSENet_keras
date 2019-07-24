@@ -6,23 +6,14 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 
-from utils.parse import process_config
-from utils.getArgs import getArgs
+from global_var import myModelConfig
 from model import PSENet
 from data_generator import train_generator, valid_generator
 from loss_metric import score_loss, siam_loss, locate_loss, score_metric, locate_metric
 from self_callbacks import MyEarlyStop
 from acc_opt import SGDAccumulate
 
-global myModelConfig
-# 模型参数配置
-try:
-    args = getArgs()
-    print("args got")
-    myModelConfig = process_config(args.config)
 
-except:
-    raise ValueError("missing or invalid arguments")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = myModelConfig.availiable_gpus
 steps_per_epoch_train = int(myModelConfig.num_train_examples_per_epoch // myModelConfig.batch_size)
