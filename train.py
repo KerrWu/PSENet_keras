@@ -45,7 +45,7 @@ momentum = myModelConfig.momentum
 train_gen = train_generator()
 valid_gen = valid_generator()
 
-siamese_model = PSENet()
+siamese_model = PSENet(myModelConfig)
 
 print(siamese_model.input)
 print(siamese_model.output)

@@ -32,9 +32,8 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
     return A_score, B_score, siamese_score
 
 
-def PSENet():
+def PSENet(myModelConfig):
 
-    global myModelConfig
     # define single network
     with tf.device('/cpu:0'):
 
