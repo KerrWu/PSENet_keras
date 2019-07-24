@@ -24,23 +24,10 @@ try:
 except:
     raise ValueError("missing or invalid arguments")
 
-height = myModelConfig.img_height
-width = myModelConfig.img_width
-num_gpus = myModelConfig.num_gpus
 os.environ["CUDA_VISIBLE_DEVICES"] = myModelConfig.availiable_gpus
 
-batch_size = myModelConfig.batch_size
 steps_per_epoch_train = int(myModelConfig.num_train_examples_per_epoch // myModelConfig.batch_size)
 steps_per_epoch_val = int(myModelConfig.num_val_examples_per_epoch // myModelConfig.batch_size)
-
-learning_rate = myModelConfig.learning_rate
-learning_rate_decay_factor = myModelConfig.learning_rate_decay_factor
-valid_freq = myModelConfig.valid_freq
-epochs = myModelConfig.num_epochs
-
-tensorboard_dir = myModelConfig.summary_dir
-weight_decay = myModelConfig.weight_decay
-momentum = myModelConfig.momentum
 
 train_gen = train_generator()
 valid_gen = valid_generator()
@@ -52,15 +39,15 @@ print(siamese_model.output)
 siamese_model.summary()
 
 parallel_model = siamese_model
-# parallel_model = multi_gpu_model(siamese_model, gpus=num_gpus)
+# parallel_model = multi_gpu_model(siamese_model, gpus=myModelConfig.num_gpus)
 
-sgd_accu = SGDAccumulate(lr=learning_rate, momentum=momentum, nesterov=True, accum_iters=myModelConfig.accu_num)
+sgd_accu = SGDAccumulate(lr=myModelConfig.learning_rate, momentum=myModelConfig.momentum, nesterov=True, accum_iters=myModelConfig.accu_num)
 # sgd = optimizers.SGD(lr=learning_rate, momentum=momentum, nesterov=True)
 
-reduce_lr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor=learning_rate_decay_factor, patience=5, verbose=1,
+reduce_lr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor=myModelConfig.learning_rate_decay_factor, patience=5, verbose=1,
                                         mode='min', cooldown=10, min_lr=0.00001)
 my_early_stop = MyEarlyStop(siamese_model, myModelConfig.checkpoint_dir)
-myTensorboard = callbacks.TensorBoard(log_dir=tensorboard_dir, histogram_freq=0, write_graph=False, write_images=True)
+myTensorboard = callbacks.TensorBoard(log_dir=myModelConfig.summary_dir, histogram_freq=0, write_graph=False, write_images=True)
 
 my_call_back = [my_early_stop, reduce_lr, myTensorboard]
 parallel_model.compile(
@@ -77,11 +64,12 @@ print("compiled")
 
 history = None
 try:
-    history = parallel_model.fit_generator(generator=train_gen, epochs=epochs, verbose=1,
+    history = parallel_model.fit_generator(generator=train_gen, epochs=myModelConfig.num_epochs, verbose=1,
                                            steps_per_epoch=steps_per_epoch_train,
                                            callbacks=my_call_back,
                                            validation_data=valid_gen,
                                            validation_steps=steps_per_epoch_val,
+                                           valid_freq=myModelConfig.valid_freq,
                                            max_queue_size=16,
                                            initial_epoch=0)
 

@@ -37,7 +37,7 @@ def PSENet(myModelConfig):
     # define single network
     with tf.device('/cpu:0'):
 
-        image_input = Input(shape=(myModelConfig.height, myModelConfig.width, 3), name="single_input")
+        image_input = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="single_input")
 
         with tf.variable_scope("resnet50", reuse=tf.AUTO_REUSE):
             base_model = ResNet50(weights="imagenet", input_shape=(800, 1024, 3), input_tensor=image_input,
