@@ -31,7 +31,9 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
 
     return A_score, B_score, siamese_score
 
-def fpn_combine(deep, shallow):
+def fpn_combine(pair):
+    deep = pair[0]
+    shallow = pair[1]
     shallow_shape = tf.shape(shallow)
     deep_up = tf.image.resize_nearest_neighbor(deep, [shallow_shape[1], shallow_shape[2]])
     shallow = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
@@ -39,7 +41,7 @@ def fpn_combine(deep, shallow):
     combine_map = shallow + deep_up
     combine_out = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
                 kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(combine_map)
-    return combine_map, combine_out
+    return (combine_map, combine_out)
 
 
 def PSENet(myModelConfig):
@@ -82,10 +84,10 @@ def PSENet(myModelConfig):
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p7)
             p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
 
-            p6_map, p6 = Lambda(fpn_combine)(p7, p6)
-            p5_map, p5 = Lambda(fpn_combine)(p6, p5)
-            p4_map, p4 = Lambda(fpn_combine)(p5, p4)
-            p3_map, p3 = Lambda(fpn_combine)(p4, p3)
+            p6_map, p6 = Lambda(fpn_combine)([p7, p6])
+            p5_map, p5 = Lambda(fpn_combine)([p6, p5])
+            p4_map, p4 = Lambda(fpn_combine)([p5, p4])
+            p3_map, p3 = Lambda(fpn_combine)([p4, p3])
 
             # p6_shape = tf.shape(p6)
             # p7_up = tf.image.resize_nearest_neighbor(p7, [p6_shape[1], p6_shape[2]])
