@@ -38,8 +38,9 @@ def locate_loss(label_list, result_list):
 
 def score_metric(label_list, result_list):
     print("score metric list shape", label_list, result_list)
-    mae = tf.reduce_mean(tf.abs(label_list - result_list))
-    return mae
+    abs_errors = tf.abs(label_list - result_list)
+    # mae = tf.reduce_mean(tf.abs(label_list - result_list))
+    return abs_errors
 
 
 def locate_metric(label_list, result_list):

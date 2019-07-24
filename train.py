@@ -56,8 +56,7 @@ sgd_accu = SGDAccumulate(lr=learning_rate, momentum=momentum, nesterov=True, acc
 # sgd = optimizers.SGD(lr=learning_rate, momentum=momentum, nesterov=True)
 
 reduce_lr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor=learning_rate_decay_factor, patience=5, verbose=1,
-                                        mode='min', cooldown=10,
-                                        min_lr=0.00001)
+                                        mode='min', cooldown=10, min_lr=0.00001)
 my_early_stop = MyEarlyStop(siamese_model, myModelConfig.checkpoint_dir)
 myTensorboard = callbacks.TensorBoard(log_dir=tensorboard_dir, histogram_freq=0, write_graph=False, write_images=True)
 
