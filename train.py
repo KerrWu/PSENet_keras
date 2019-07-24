@@ -63,7 +63,6 @@ try:
                                            callbacks=my_call_back,
                                            validation_data=valid_gen,
                                            validation_steps=steps_per_epoch_val,
-                                           valid_freq=myModelConfig.valid_freq,
                                            max_queue_size=16,
                                            initial_epoch=0)
 
