@@ -31,17 +31,24 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
 
     return A_score, B_score, siamese_score
 
-def fpn_combine(pair):
+# def fpn_combine(pair):
+#     deep = pair[0]
+#     shallow = pair[1]
+#     shallow_shape = tf.shape(shallow)
+#     deep_up = tf.image.resize_nearest_neighbor(deep, [shallow_shape[1], shallow_shape[2]])
+#     shallow = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+#                 kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(shallow)
+#     combine_map = shallow + deep_up
+#     combine_out = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+#                 kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(combine_map)
+#     return tf.convert_to_tensor((combine_map, combine_out))
+
+def upsampleing(pair):
     deep = pair[0]
     shallow = pair[1]
     shallow_shape = tf.shape(shallow)
     deep_up = tf.image.resize_nearest_neighbor(deep, [shallow_shape[1], shallow_shape[2]])
-    shallow = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(shallow)
-    combine_map = shallow + deep_up
-    combine_out = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(combine_map)
-    return tf.convert_to_tensor((combine_map, combine_out))
+    return deep_up
 
 
 def PSENet(myModelConfig):
@@ -84,10 +91,33 @@ def PSENet(myModelConfig):
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p7)
             p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
 
-            p6_map, p6 = Lambda(fpn_combine)([p7, p6])
-            p5_map, p5 = Lambda(fpn_combine)([p6, p5])
-            p4_map, p4 = Lambda(fpn_combine)([p5, p4])
-            p3_map, p3 = Lambda(fpn_combine)([p4, p3])
+            p7_up = Lambda(upsampleing)([p7, p6])
+            p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
+            p6_map = Add()([p6, p7_up])
+            p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6_map)
+
+            p6_up = Lambda(upsampleing)([p6, p5])
+            p5 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5)
+            p5_map = Add()([p5, p6_up])
+            p5 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5_map)
+
+            p5_up = Lambda(upsampleing)([p5, p4])
+            p4 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4)
+            p4_map =  Add()([p4, p5_up])
+            p4 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4_map)
+
+            p4_up = Lambda(upsampleing)([p4, p3])
+            p3 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3)
+            p3_map = Add()([p3, p4_up])
+            p3 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3_map)
 
             # p6_shape = tf.shape(p6)
             # p7_up = tf.image.resize_nearest_neighbor(p7, [p6_shape[1], p6_shape[2]])
