@@ -41,7 +41,7 @@ def fpn_combine(pair):
     combine_map = shallow + deep_up
     combine_out = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
                 kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(combine_map)
-    return (combine_map, combine_out)
+    return tf.convert_to_tensor((combine_map, combine_out))
 
 
 def PSENet(myModelConfig):
