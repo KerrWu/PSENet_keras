@@ -33,11 +33,12 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
 
 
 def PSENet():
-    global height, width, weight_decay
+
+    global myModelConfig
     # define single network
     with tf.device('/cpu:0'):
 
-        image_input = Input(shape=(800, 1024, 3), name="single_input")
+        image_input = Input(shape=(myModelConfig.height, myModelConfig.width, 3), name="single_input")
 
         with tf.variable_scope("resnet50", reuse=tf.AUTO_REUSE):
             base_model = ResNet50(weights="imagenet", input_shape=(800, 1024, 3), input_tensor=image_input,
@@ -45,16 +46,15 @@ def PSENet():
 
             for layer in base_model.layers:
                 if isinstance(layer, keras.layers.DepthwiseConv2D):
-                    layer.add_loss(keras.regularizers.l2(weight_decay)(layer.depthwise_kernel))
+                    layer.add_loss(keras.regularizers.l2(myModelConfig.weight_decay)(layer.depthwise_kernel))
                 elif isinstance(layer, keras.layers.Conv2D) or isinstance(layer, keras.layers.Dense):
-                    layer.add_loss(keras.regularizers.l2(weight_decay)(layer.kernel))
+                    layer.add_loss(keras.regularizers.l2(myModelConfig.weight_decay)(layer.kernel))
                 if hasattr(layer, 'bias_regularizer') and layer.use_bias:
-                    layer.add_loss(keras.regularizers.l2(weight_decay)(layer.bias))
+                    layer.add_loss(keras.regularizers.l2(myModelConfig.weight_decay)(layer.bias))
 
         with tf.variable_scope("FPN_SRM", reuse=tf.AUTO_REUSE):
             # p2 = base_model.get_layer("activation_10").output
             # p2_score_map, p2_locate_map = score_refine_module(p2, "p2")
-
 
             # FPN
             p3 = base_model.get_layer("activation_22").output
@@ -62,48 +62,48 @@ def PSENet():
             p5 = base_model.get_layer("activation_49").output
 
             p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(base_model.output)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(base_model.output)
             p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p6)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
             p6 = MaxPooling2D(pool_size=(2, 2), padding='same')(p6)
 
             p7 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p6)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
             p7 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p7)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p7)
             p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
 
             p6_shape = tf.shape(p6)
             p7_up = tf.image.resize_nearest_neighbor(p7, [p6_shape[1], p6_shape[2]])
             p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p6)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
             p6_map = p6 + p7_up
             p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p6_map)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6_map)
 
             p5_shape = tf.shape(p5)
             p6_up = tf.image.resize_nearest_neighbor(p6, [p5_shape[1], p5_shape[2]])
             p5 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p5)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5)
             p5_map = p5 + p6_up
             p5 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p5_map)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5_map)
 
             p4_shape = tf.shape(p4)
             p5_up = tf.image.resize_nearest_neighbor(p5, [p4_shape[1], p4_shape[2]])
             p4 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p4)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4)
             p4_map = p4 + p5_up
             p4 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p4_map)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4_map)
 
             p3_shape = tf.shape(p3)
             p4_up = tf.image.resize_nearest_neighbor(p4, [p3_shape[1], p3_shape[2]])
             p3 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p3)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3)
             p3_map = p3 + p4_up
             p3 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(weight_decay))(p3_map)
+                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3_map)
 
             p3_score_map, p3_locate_map = score_refine_module(p3, "p3")
             p4_score_map, p4_locate_map = score_refine_module(p4, "p4")

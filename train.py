@@ -8,7 +8,13 @@ plt.switch_backend('agg')
 
 from utils.parse import process_config
 from utils.getArgs import getArgs
+from model import PSENet
+from data_generator import train_generator, valid_generator
+from loss_metric import score_loss, siam_loss, locate_loss, score_metric, locate_metric
+from self_callbacks import MyEarlyStop
+from acc_opt import SGDAccumulate
 
+global myModelConfig
 # 模型参数配置
 try:
     args = getArgs()
@@ -35,13 +41,6 @@ epochs = myModelConfig.num_epochs
 tensorboard_dir = myModelConfig.summary_dir
 weight_decay = myModelConfig.weight_decay
 momentum = myModelConfig.momentum
-
-
-from model import PSENet
-from data_generator import train_generator, valid_generator
-from loss_metric import score_loss, siam_loss, locate_loss, score_metric, locate_metric
-from self_callbacks import MyEarlyStop
-from acc_opt import SGDAccumulate
 
 train_gen = train_generator()
 valid_gen = valid_generator()
