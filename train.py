@@ -25,7 +25,6 @@ except:
     raise ValueError("missing or invalid arguments")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = myModelConfig.availiable_gpus
-
 steps_per_epoch_train = int(myModelConfig.num_train_examples_per_epoch // myModelConfig.batch_size)
 steps_per_epoch_val = int(myModelConfig.num_val_examples_per_epoch // myModelConfig.batch_size)
 
