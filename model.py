@@ -83,7 +83,6 @@ def PSENet(myModelConfig):
             p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
 
             p6_map, p6 = Lambda(fpn_combine)(p7, p6)
-            p6_map, p6 = Lambda(fpn_combine)(p7, p6)
             p5_map, p5 = Lambda(fpn_combine)(p6, p5)
             p4_map, p4 = Lambda(fpn_combine)(p5, p4)
             p3_map, p3 = Lambda(fpn_combine)(p4, p3)
