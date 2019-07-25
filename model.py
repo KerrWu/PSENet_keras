@@ -15,19 +15,16 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
 
     # score A:
     A_vector = Concatenate()([GlobalAveragePooling2D()(output_score_map_a[i]) for i in range(5)])
-    A_score = Dense(5, activation=None, name="scoreA", kernel_initializer='he_normal',
-                    kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(A_vector)
+    A_score = Dense(5, activation=None, name="scoreA", kernel_initializer='he_normal')(A_vector)
 
     # score B:
     B_vector = Concatenate()([GlobalAveragePooling2D()(output_score_map_b[i]) for i in range(5)])
-    B_score = Dense(5, activation=None, name="scoreB", kernel_initializer='he_normal',
-                    kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(B_vector)
+    B_score = Dense(5, activation=None, name="scoreB", kernel_initializer='he_normal')(B_vector)
 
     # score gap:
     siamese_map = [Add()([output_score_map_a[i], output_score_map_b[i]]) for i in range(5)]
     siamese_vector = Concatenate()([GlobalAveragePooling2D()(siamese_map[i]) for i in range(5)])
-    siamese_score = Dense(5, activation=None, name="scoreSiam", kernel_initializer='he_normal',
-                          kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(siamese_vector)
+    siamese_score = Dense(5, activation=None, name="scoreSiam", kernel_initializer='he_normal')(siamese_vector)
 
     return A_score, B_score, siamese_score
 
