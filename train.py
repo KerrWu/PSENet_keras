@@ -28,8 +28,8 @@ print(siamese_model.input)
 print(siamese_model.output)
 siamese_model.summary()
 
-# parallel_model = siamese_model
-parallel_model = multi_gpu_model(siamese_model, gpus=myModelConfig.num_gpus)
+parallel_model = siamese_model
+# parallel_model = multi_gpu_model(siamese_model, gpus=myModelConfig.num_gpus)
 
 sgd_accu = SGDAccumulate(lr=myModelConfig.learning_rate, momentum=myModelConfig.momentum, nesterov=True, accum_iters=myModelConfig.accu_num)
 # sgd = optimizers.SGD(lr=learning_rate, momentum=momentum, nesterov=True)
@@ -44,7 +44,7 @@ parallel_model.compile(
     loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "subnetwork": locate_loss},
     loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05, "subnetwork": 1},
     optimizer=sgd_accu,
-    metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "subnetwork_1": locate_metric})
+    metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "subnetwork": locate_metric})
 # parallel_model.compile(
 #     loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "subnetwork_1": locate_loss,
 #           "subnetwork_2": locate_loss, "subnetwork_3": locate_loss, "subnetwork_4": locate_loss,
