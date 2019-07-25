@@ -19,9 +19,9 @@
   "num_val_examples_per_epoch":900,
 
   "excel_path":"./pasi.xlsx",
-  "train_txt_file":"./txt/train.txt",
-  "val_txt_file": "./txt/val.txt",
-  "data_root": "./",
+  "train_txt_file":"./txt_for_new/train.txt",
+  "val_txt_file": "./txt_for_new/val.txt",
+  "data_root": "/data1/kerrzwu/data/pasi/pasi_detection",
   "log_device_placement": true,
 
   "history_file":"./experiments/history.txt",
