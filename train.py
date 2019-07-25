@@ -42,6 +42,7 @@ myTensorboard = callbacks.TensorBoard(log_dir=myModelConfig.summary_dir, histogr
 my_call_back = [my_early_stop, reduce_lr, myTensorboard]
 parallel_model.compile(
     loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "subnetwork": locate_loss},
+    loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05, "subnetwork": 1},
     optimizer=sgd_accu,
     metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "subnetwork_1": locate_metric})
 # parallel_model.compile(
