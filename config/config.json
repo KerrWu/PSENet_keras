@@ -21,7 +21,7 @@
   "excel_path":"./pasi.xlsx",
   "train_txt_file":"./txt/train.txt",
   "val_txt_file": "./txt/val.txt",
-
+  "data_root": "./",
   "log_device_placement": true,
 
   "history_file":"./experiments/history.txt",
