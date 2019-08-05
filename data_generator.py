@@ -593,7 +593,7 @@ def valid_generator():
                     continue
 
     root_dir = myModelConfig.data_root
-    val_file = myModelConfig.train_txt_file
+    val_file = myModelConfig.val_txt_file
 
     # root_dir = "G:\\pasi\\pasi_detection"
     # val_file = "G:\\pasi\\val.txt"
@@ -843,7 +843,7 @@ def test_generator():
                     continue
 
     root_dir = myModelConfig.data_root
-    val_file = myModelConfig.train_txt_file
+    val_file = myModelConfig.val_txt_file
 
     # root_dir = "G:\\pasi\\pasi_detection"
     # val_file = "G:\\pasi\\val.txt"

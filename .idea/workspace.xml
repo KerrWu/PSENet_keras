@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a1751443-34a3-4c71-8c2e-04277b1f5652" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.py" afterPath="$PROJECT_DIR$/test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_generator.py" afterPath="$PROJECT_DIR$/data_generator.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -63,11 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="1019" column="0" lean-forward="true" selection-start-line="1019" selection-start-column="0" selection-end-line="1019" selection-end-column="0" />
+            <state relative-caret-position="-3374">
+              <caret line="854" column="35" lean-forward="false" selection-start-line="854" selection-start-column="35" selection-end-line="854" selection-end-column="35" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <element signature="e#154#281#0" expanded="false" />
@@ -77,17 +77,17 @@
                 <element signature="e#2397#3785#0" expanded="false" />
                 <element signature="e#3842#7147#0" expanded="false" />
                 <element signature="e#7177#17648#0" expanded="false" />
-                <element signature="e#17678#26358#0" expanded="false" />
+                <element signature="e#17678#26356#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="17" column="16" lean-forward="false" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+            <state relative-caret-position="437">
+              <caret line="19" column="26" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="31" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -172,8 +172,8 @@
         <option value="$PROJECT_DIR$/config/config.json" />
         <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/train.py" />
-        <option value="$PROJECT_DIR$/data_generator.py" />
         <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/data_generator.py" />
       </list>
     </option>
   </component>
@@ -653,24 +653,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="1019" column="0" lean-forward="true" selection-start-line="1019" selection-start-column="0" selection-end-line="1019" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#154#281#0" expanded="false" />
-            <element signature="e#322#390#0" expanded="false" />
-            <element signature="e#475#1708#0" expanded="false" />
-            <element signature="e#1750#2340#0" expanded="false" />
-            <element signature="e#2397#3785#0" expanded="false" />
-            <element signature="e#3842#7147#0" expanded="false" />
-            <element signature="e#7177#17648#0" expanded="false" />
-            <element signature="e#17678#26358#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/global_var.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -719,10 +701,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="17" column="16" lean-forward="false" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+        <state relative-caret-position="437">
+          <caret line="19" column="26" lean-forward="false" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="31" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3374">
+          <caret line="854" column="35" lean-forward="false" selection-start-line="854" selection-start-column="35" selection-end-line="854" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#154#281#0" expanded="false" />
+            <element signature="e#322#390#0" expanded="false" />
+            <element signature="e#475#1708#0" expanded="false" />
+            <element signature="e#1750#2340#0" expanded="false" />
+            <element signature="e#2397#3785#0" expanded="false" />
+            <element signature="e#3842#7147#0" expanded="false" />
+            <element signature="e#7177#17648#0" expanded="false" />
+            <element signature="e#17678#26356#0" expanded="false" />
           </folding>
         </state>
       </provider>
