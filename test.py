@@ -39,6 +39,7 @@ try:
 
             f.write(img1_name + ",")
             f.write(output + "\n")
+            print(img1_name, img2_name)
 
 except StopIteration:
     print("{} img have been predicted".format(count))
