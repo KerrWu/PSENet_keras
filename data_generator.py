@@ -898,129 +898,126 @@ def test_generator():
         box_list.append(cur_box)
 
     zip_list = list(zip(img_list, box_list))
-    while True:
-        zip_copy = copy.deepcopy(zip_list)
-        np.random.shuffle(zip_copy)
 
-        img_list_epoch = [elem[0] for elem in zip_copy]
-        box_list_epoch = [elem[1] for elem in zip_copy]
+    img_list_epoch = [elem[0] for elem in zip_list]
+    box_list_epoch = [elem[1] for elem in zip_list]
 
-        while len(img_list_epoch) != 0:
+    while len(img_list_epoch) != 0:
 
-            if len(img_list_epoch) >= 2:
-                box1 = box_list_epoch.pop()
-                img1 = img_list_epoch.pop()
-                img1_basename = os.path.basename(img1)
+        if len(img_list_epoch) >= 2:
+            box1 = box_list_epoch.pop()
+            img1 = img_list_epoch.pop()
+            img1_basename = os.path.basename(img1)
 
-                name1 = img1_basename[:-4]
+            name1 = img1_basename[:-4]
 
-                try:
-                    patient_name1, part_name1 = tuple(re.split('-|-|/| |\n|\t', name1))
+            try:
+                patient_name1, part_name1 = tuple(re.split('-|-|/| |\n|\t', name1))
 
-                except:
-                    continue
+            except:
+                continue
 
-                if patient_name1 not in patient_dict.keys():
-                    continue
-                if part_name1 not in patient_dict[patient_name1].keys():
-                    continue
+            if patient_name1 not in patient_dict.keys():
+                continue
+            if part_name1 not in patient_dict[patient_name1].keys():
+                continue
 
-                try:
-                    score1_area = patient_dict[patient_name1][part_name1]["area"]
-                except:
-                    score1_area = 0.0
+            try:
+                score1_area = patient_dict[patient_name1][part_name1]["area"]
+            except:
+                score1_area = 0.0
 
-                try:
-                    score1_ery = patient_dict[patient_name1][part_name1]["erythema"]
-                except:
-                    score1_ery = 0.0
+            try:
+                score1_ery = patient_dict[patient_name1][part_name1]["erythema"]
+            except:
+                score1_ery = 0.0
 
-                try:
-                    score1_sca = patient_dict[patient_name1][part_name1]["scale"]
-                except:
-                    score1_sca = 0.0
+            try:
+                score1_sca = patient_dict[patient_name1][part_name1]["scale"]
+            except:
+                score1_sca = 0.0
 
-                try:
-                    score1_ind = patient_dict[patient_name1][part_name1]["induration"]
-                except:
-                    score1_ind = 0.0
+            try:
+                score1_ind = patient_dict[patient_name1][part_name1]["induration"]
+            except:
+                score1_ind = 0.0
 
-                try:
-                    score1_pasi = patient_dict[patient_name1]["pasi"]
-                except:
-                    continue
+            try:
+                score1_pasi = patient_dict[patient_name1]["pasi"]
+            except:
+                continue
 
-                score1 = [score1_area, score1_ery, score1_sca, score1_ind, score1_pasi]
-                _img1 = Image.open(img1)
+            score1 = [score1_area, score1_ery, score1_sca, score1_ind, score1_pasi]
+            _img1 = Image.open(img1)
 
-                try:
-                    img1, box1 = valid_data_preprocessing(_img1, box1)
-                except:
-                    raise
+            try:
+                img1, box1 = valid_data_preprocessing(_img1, box1)
+            except:
+                raise
 
-                map_label1 = get_disease_map_label(box1)
+            map_label1 = get_disease_map_label(box1)
 
-                box2 = box_list_epoch.pop()
-                img2 = img_list_epoch.pop()
-                img2_basename = os.path.basename(img2)
+            box2 = box_list_epoch.pop()
+            img2 = img_list_epoch.pop()
+            img2_basename = os.path.basename(img2)
 
-                name2 = img2_basename[:-4]
+            name2 = img2_basename[:-4]
 
-                try:
-                    patient_name2, part_name2 = tuple(re.split('-|-|/| |\n|\t', name2))
-                except:
-                    continue
+            try:
+                patient_name2, part_name2 = tuple(re.split('-|-|/| |\n|\t', name2))
+            except:
+                continue
 
-                if patient_name2 not in patient_dict.keys():
-                    continue
-                if part_name2 not in patient_dict[patient_name2].keys():
-                    continue
+            if patient_name2 not in patient_dict.keys():
+                continue
+            if part_name2 not in patient_dict[patient_name2].keys():
+                continue
 
-                try:
-                    score2_area = patient_dict[patient_name2][part_name2]["area"]
-                except:
-                    score2_area = 0.0
+            try:
+                score2_area = patient_dict[patient_name2][part_name2]["area"]
+            except:
+                score2_area = 0.0
 
-                try:
-                    score2_ery = patient_dict[patient_name2][part_name2]["erythema"]
-                except:
-                    score2_ery = 0.0
+            try:
+                score2_ery = patient_dict[patient_name2][part_name2]["erythema"]
+            except:
+                score2_ery = 0.0
 
-                try:
-                    score2_sca = patient_dict[patient_name2][part_name2]["scale"]
-                except:
-                    score2_sca = 0.0
+            try:
+                score2_sca = patient_dict[patient_name2][part_name2]["scale"]
+            except:
+                score2_sca = 0.0
 
-                try:
-                    score2_ind = patient_dict[patient_name2][part_name2]["induration"]
-                except:
-                    score2_ind = 0.0
+            try:
+                score2_ind = patient_dict[patient_name2][part_name2]["induration"]
+            except:
+                score2_ind = 0.0
 
-                try:
-                    score2_pasi = patient_dict[patient_name2]["pasi"]
-                except:
-                    continue
+            try:
+                score2_pasi = patient_dict[patient_name2]["pasi"]
+            except:
+                continue
 
-                score2 = [score2_area, score2_ery, score2_sca, score2_ind, score2_pasi]
+            score2 = [score2_area, score2_ery, score2_sca, score2_ind, score2_pasi]
 
-                _img2 = Image.open(img2)
+            _img2 = Image.open(img2)
 
-                try:
-                    img2, box2 = valid_data_preprocessing(_img2, box2)
-                except:
-                    raise
+            try:
+                img2, box2 = valid_data_preprocessing(_img2, box2)
+            except:
+                raise
 
-                map_label2 = get_disease_map_label(box2)
+            map_label2 = get_disease_map_label(box2)
 
-                yield_img = [np.array([img1]), np.array([img2])]
-                yield_label = [[score1], [score2], [[abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]]
+            yield_img = [np.array([img1]), np.array([img2])]
+            yield_label = [[score1], [score2], [[abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]]
 
-                [yield_label.append([elem]) for elem in map_label1]
-                [yield_label.append([elem]) for elem in map_label2]
+            [yield_label.append([elem]) for elem in map_label1]
+            [yield_label.append([elem]) for elem in map_label2]
 
-                # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                yield img1_basename, img2_basename, yield_img, yield_label
-                # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
+            # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
+            yield img1_basename, img2_basename, yield_img, yield_label
+            # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
 
-            else:
-                break
+        else:
+            break
