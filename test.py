@@ -53,17 +53,18 @@ try:
             img1_name, img2_name, img_list, label_list = next(data_generator)
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
 
-            img1_result = [elem for elem in output[0].flatten()]
-            label1_list = [elem for elem in label_list[0][0]]
+            img1_result = [float(elem) for elem in output[0].flatten()]
+            label1_list = [float(elem) for elem in label_list[0][0]]
 
-            img2_result = [elem for elem in output[1].flatten()]
-            label2_list = [elem for elem in label_list[1][0]]
+            img2_result = [float(elem) for elem in output[1].flatten()]
+            label2_list = [float(elem) for elem in label_list[1][0]]
 
-            siam_result = [elem for elem in output[2].flatten()]
-            label_siam_list = [elem for elem in label_list[2][0]]
+            siam_result = [float(elem) for elem in output[2].flatten()]
+            label_siam_list = [float(elem) for elem in label_list[2][0]]
 
             count += 1
-
+            print(img1_result)
+            print(label1_list)
             error += np.abs(np.array(img1_result, dtype=float) - np.array(label1_list, dtype=float))
             error += np.abs(np.array(img2_result, dtype=float) - np.array(label2_list, dtype=float))
 
