@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a1751443-34a3-4c71-8c2e-04277b1f5652" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_generator.py" afterPath="$PROJECT_DIR$/data_generator.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.py" afterPath="$PROJECT_DIR$/test.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -76,8 +77,8 @@
       <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="517" column="66" lean-forward="false" selection-start-line="517" selection-start-column="56" selection-end-line="517" selection-end-column="66" />
+            <state relative-caret-position="527">
+              <caret line="911" column="43" lean-forward="false" selection-start-line="911" selection-start-column="43" selection-end-line="911" selection-end-column="43" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <element signature="e#154#281#0" expanded="false" />
@@ -86,6 +87,7 @@
                 <element signature="e#1750#2340#0" expanded="false" />
                 <element signature="e#2397#3785#0" expanded="false" />
                 <element signature="e#3842#7147#0" expanded="false" />
+                <element signature="e#7177#17648#0" expanded="false" />
                 <element signature="e#17678#26356#0" expanded="false" />
               </folding>
             </state>
@@ -95,8 +97,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="502">
-              <caret line="60" column="61" lean-forward="false" selection-start-line="60" selection-start-column="61" selection-end-line="60" selection-end-column="61" />
+            <state relative-caret-position="525">
+              <caret line="60" column="63" lean-forward="false" selection-start-line="60" selection-start-column="63" selection-end-line="60" selection-end-column="63" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -701,8 +703,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="517" column="66" lean-forward="false" selection-start-line="517" selection-start-column="56" selection-end-line="517" selection-end-column="66" />
+        <state relative-caret-position="527">
+          <caret line="911" column="43" lean-forward="false" selection-start-line="911" selection-start-column="43" selection-end-line="911" selection-end-column="43" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <element signature="e#154#281#0" expanded="false" />
@@ -711,6 +713,7 @@
             <element signature="e#1750#2340#0" expanded="false" />
             <element signature="e#2397#3785#0" expanded="false" />
             <element signature="e#3842#7147#0" expanded="false" />
+            <element signature="e#7177#17648#0" expanded="false" />
             <element signature="e#17678#26356#0" expanded="false" />
           </folding>
         </state>
@@ -718,8 +721,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="60" column="61" lean-forward="false" selection-start-line="60" selection-start-column="61" selection-end-line="60" selection-end-column="61" />
+        <state relative-caret-position="525">
+          <caret line="60" column="63" lean-forward="false" selection-start-line="60" selection-start-column="63" selection-end-line="60" selection-end-column="63" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
