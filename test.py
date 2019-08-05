@@ -1,4 +1,5 @@
 import os
+import tensorflow as tf
 from keras.models import load_model
 from data_generator import test_generator
 
@@ -19,7 +20,7 @@ print(model_path)
 save_dir = "./experiments/results"
 data_generator = test_generator()
 
-model = load_model(model_path)
+model = load_model(model_path, custom_objects={"tf":tf})
 count = 0
 try:
     if not os.path.isdir(save_dir):
