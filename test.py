@@ -1,5 +1,6 @@
 import os
 import csv
+import numpy as np
 import tensorflow as tf
 from acc_opt import SGDAccumulate
 from keras.models import load_model
@@ -49,17 +50,15 @@ try:
         while True:
             img1_name, img2_name, img_list, label_list = next(data_generator)
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
-            print(output[0])
-            print(output[1])
-            print(output[2])
-            img1_result = [elem for elem in output[0]]
-            label1_list = [elem for elem in label_list[0]]
 
-            img2_result = [elem for elem in output[1]]
-            label2_list = [elem for elem in label_list[1]]
+            img1_result = [elem for elem in output[0].flattne()]
+            label1_list = [elem for elem in label_list[0].flattne()]
 
-            siam_result = [elem for elem in output[2]]
-            label_siam_list = [elem for elem in label_list[2]]
+            img2_result = [elem for elem in output[1].flattne()]
+            label2_list = [elem for elem in label_list[1].flattne()]
+
+            siam_result = [elem for elem in output[2].flattne()]
+            label_siam_list = [elem for elem in label_list[2].flattne()]
 
             count += 1
 
