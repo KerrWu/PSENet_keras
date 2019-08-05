@@ -31,7 +31,7 @@ model = load_model(model_path, custom_objects={"tf": tf, "SGDAccumulate": SGDAcc
                                                "score_metric": score_metric, "locate_metric": locate_metric})
 count = 0
 index_name = ["area", "ery", "sca", "ind", "pasi"]
-error = np.array([0, 0, 0, 0, 0])
+error = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
 def result_writer(f, img_name, predict_list, label_list):
@@ -65,8 +65,6 @@ try:
             label_siam_list = [float(elem) for elem in label_list[2][0]]
 
             count += 1
-            print(img1_result)
-            print(label1_list)
             error += np.abs(np.array(img1_result, dtype=float) - np.array(label1_list, dtype=float))
             error += np.abs(np.array(img2_result, dtype=float) - np.array(label2_list, dtype=float))
 
