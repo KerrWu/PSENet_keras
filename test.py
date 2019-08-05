@@ -52,13 +52,13 @@ try:
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
 
             img1_result = [elem for elem in output[0].flatten()]
-            label1_list = [elem for elem in label_list[0].flatten()]
+            label1_list = [elem for elem in label_list[0]]
 
             img2_result = [elem for elem in output[1].flatten()]
-            label2_list = [elem for elem in label_list[1].flatten()]
+            label2_list = [elem for elem in label_list[1]]
 
             siam_result = [elem for elem in output[2].flatten()]
-            label_siam_list = [elem for elem in label_list[2].flatten()]
+            label_siam_list = [elem for elem in label_list[2]]
 
             count += 1
 
