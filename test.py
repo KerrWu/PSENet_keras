@@ -64,8 +64,8 @@ try:
 
             count += 1
 
-            error += np.abs(np.array(img1_result) - np.array(label1_list))
-            error += np.abs(np.array(img2_result) - np.array(label2_list))
+            error += np.abs(np.array(img1_result, dtype=float) - np.array(label1_list, dtype=float))
+            error += np.abs(np.array(img2_result, dtype=float) - np.array(label2_list, dtype=float))
 
             # area_error += abs(label1_list[0] - img1_result[0])
             # area_error += abs(label2_list[0] - img2_result[0])
@@ -95,6 +95,6 @@ except StopIteration:
 
         for i in range(len(index_name)):
             print("mae of {} = {}".format(index_name[i], error[i]))
-        
+
     print("{} img have been predicted".format(count))
     print("Done")
