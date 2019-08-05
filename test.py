@@ -64,7 +64,7 @@ try:
             siam_result = [float(elem) for elem in output[2].flatten()]
             label_siam_list = [float(elem) for elem in label_list[2][0]]
 
-            count += 1
+            count += 2
             error += np.abs(np.array(img1_result, dtype=float) - np.array(label1_list, dtype=float))
             error += np.abs(np.array(img2_result, dtype=float) - np.array(label2_list, dtype=float))
 
@@ -92,7 +92,7 @@ try:
 except StopIteration:
 
     if count != 0:
-        error /= 2 * count
+        error /= count
 
         for i in range(len(index_name)):
             print("mae of {} = {}".format(index_name[i], error[i]))
