@@ -2,7 +2,7 @@ import os
 from keras.models import load_model
 from data_generator import test_generator
 
-os.environ["CUDA_VISIBLE_DEVICES"] = None
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 model_path = "./experiments/checkpoints"
 
