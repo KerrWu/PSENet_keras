@@ -910,6 +910,7 @@ def test_generator():
             if len(img_list_epoch) >= 2:
                 box1 = box_list_epoch.pop()
                 img1 = img_list_epoch.pop()
+                img1_name = img1
                 img1_basename = os.path.basename(img1)
 
                 name1 = img1_basename[:-4]
@@ -962,6 +963,7 @@ def test_generator():
 
                 box2 = box_list_epoch.pop()
                 img2 = img_list_epoch.pop()
+                img2_name = img2
                 img2_basename = os.path.basename(img2)
 
                 name2 = img2_basename[:-4]
@@ -1019,7 +1021,7 @@ def test_generator():
                 [yield_label.append([elem]) for elem in map_label2]
 
                 # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                yield img1, img2, yield_img, yield_label
+                yield img1_name, img2_name, yield_img, yield_label
                 # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
 
             else:

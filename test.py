@@ -34,14 +34,14 @@ try:
         while True:
             img1_name, img2_name, img_list, label_list = next(data_generator)
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
-            output = output[:3]
+            img1_result = [str(elem) for elem in output[0]]
+            img2_result = [str(elem) for elem in output[1]]
+            siam_result = [str(elem) for elem in output[2]]
             count += 1
 
-            f.write(img1_name)
-            f.write(",")
-            f.write(img2_name)
-            f.write("\n")
-            f.write(output)
+            f.write(img1_name+","+",".join(img1_result))
+            f.write(img2_name + "," + ",".join(img2_result))
+            f.write(img1_name+","+img2_name + "," + ",".join(siam_result))
             print(img1_name, img2_name)
 
 except StopIteration:
