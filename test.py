@@ -37,8 +37,11 @@ try:
             output = output[:3]
             count += 1
 
-            f.write(img1_name + ",")
-            f.write(output + "\n")
+            f.write(img1_name)
+            f.write(",")
+            f.write(img2_name)
+            f.write("\n")
+            f.write(output)
             print(img1_name, img2_name)
 
 except StopIteration:
