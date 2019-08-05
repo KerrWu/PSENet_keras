@@ -51,20 +51,20 @@ try:
             img1_name, img2_name, img_list, label_list = next(data_generator)
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
 
-            img1_result = [elem for elem in output[0].flattne()]
-            label1_list = [elem for elem in label_list[0].flattne()]
+            img1_result = [elem for elem in output[0].flatten()]
+            label1_list = [elem for elem in label_list[0].flatten()]
 
-            img2_result = [elem for elem in output[1].flattne()]
-            label2_list = [elem for elem in label_list[1].flattne()]
+            img2_result = [elem for elem in output[1].flatten()]
+            label2_list = [elem for elem in label_list[1].flatten()]
 
-            siam_result = [elem for elem in output[2].flattne()]
-            label_siam_list = [elem for elem in label_list[2].flattne()]
+            siam_result = [elem for elem in output[2].flatten()]
+            label_siam_list = [elem for elem in label_list[2].flatten()]
 
             count += 1
 
             result_writer(csv_writer, img1_name, img1_result, label1_list)
-            result_writer(csv_writer, img1_name, img2_result, label2_list)
-            result_writer(csv_writer, img1_name, siam_result, label_siam_list)
+            result_writer(csv_writer, img2_name, img2_result, label2_list)
+            result_writer(csv_writer, img1_name+","+img2_name, siam_result, label_siam_list)
 
             print(img1_name, img2_name)
 
