@@ -28,6 +28,8 @@ model = load_model(model_path, custom_objects={"tf": tf, "SGDAccumulate": SGDAcc
                                                "siam_loss": siam_loss, "locate_loss": locate_loss,
                                                "score_metric": score_metric, "locate_metric": locate_metric})
 count = 0
+index_name = ["area", "ery", "sca", "ind", "pasi"]
+error = np.array([0, 0, 0, 0, 0])
 
 
 def result_writer(f, img_name, predict_list, label_list):
@@ -62,12 +64,37 @@ try:
 
             count += 1
 
+            error += np.abs(np.array(img1_result) - np.array(label1_list))
+            error += np.abs(np.array(img2_result) - np.array(label2_list))
+
+            # area_error += abs(label1_list[0] - img1_result[0])
+            # area_error += abs(label2_list[0] - img2_result[0])
+            #
+            # ery_error += abs(label1_list[1] - img1_result[1])
+            # ery_error += abs(label2_list[1] - img2_result[1])
+            #
+            # scale_error += abs(label1_list[2] - img1_result[2])
+            # scale_error += abs(label2_list[2] - img2_result[2])
+            #
+            # ind_error += abs(label1_list[3] - img1_result[3])
+            # ind_error += abs(label2_list[3] - img2_result[3])
+            #
+            # pasi_error += abs(label1_list[4] - img1_result[4])
+            # pasi_error += abs(label2_list[4] - img2_result[4])
+
             result_writer(csv_writer, img1_name, img1_result, label1_list)
             result_writer(csv_writer, img2_name, img2_result, label2_list)
-            result_writer(csv_writer, img1_name+","+img2_name, siam_result, label_siam_list)
+            result_writer(csv_writer, img1_name + "," + img2_name, siam_result, label_siam_list)
 
             print(img1_name, img2_name)
 
 except StopIteration:
+
+    if count != 0:
+        error /= 2 * count
+
+        for i in range(len(index_name)):
+            print("mae of {} = {}".format(index_name[i], error[i]))
+        
     print("{} img have been predicted".format(count))
     print("Done")
