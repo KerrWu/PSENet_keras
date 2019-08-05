@@ -28,24 +28,30 @@ model = load_model(model_path, custom_objects={"tf": tf, "SGDAccumulate": SGDAcc
                                                "score_metric": score_metric, "locate_metric": locate_metric})
 count = 0
 
-def result_writer(f, img_name, predict_list, label_list):
 
+def result_writer(f, img_name, predict_list, label_list):
     row = [img2_name]
     row.extend(predict_list)
     row.extend(label_list)
     f.writerow(row)
 
+
 try:
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
     with open(os.path.join(save_dir, "predict.csv"), "w", newline="") as f:
-        csv_writer =csv.writer(f)
-        head = ["name", "area","erythema","scale","induration", "area_label","erythema_label","scale_label","induration_label"]
+        csv_writer = csv.writer(f)
+        head = ["name", "area", "erythema", "scale", "induration", "pasi", "area_label", "erythema_label",
+                "scale_label", "induration_label", "pasi_label"]
+
         csv_writer.writerow(head)
 
         while True:
             img1_name, img2_name, img_list, label_list = next(data_generator)
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
+            print(output[0])
+            print(output[1])
+            print(output[2])
             img1_result = [elem for elem in output[0]]
             label1_list = [elem for elem in label_list[0]]
 

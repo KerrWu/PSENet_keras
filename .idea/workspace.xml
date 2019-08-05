@@ -76,8 +76,8 @@
       <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
-              <caret line="307" column="73" lean-forward="false" selection-start-line="307" selection-start-column="63" selection-end-line="307" selection-end-column="73" />
+            <state relative-caret-position="345">
+              <caret line="503" column="71" lean-forward="false" selection-start-line="503" selection-start-column="71" selection-end-line="503" selection-end-column="71" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <element signature="e#154#281#0" expanded="false" />
@@ -95,8 +95,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="640">
-              <caret line="57" column="22" lean-forward="true" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="22" />
+            <state relative-caret-position="390">
+              <caret line="53" column="28" lean-forward="false" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -701,8 +701,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="307" column="73" lean-forward="false" selection-start-line="307" selection-start-column="63" selection-end-line="307" selection-end-column="73" />
+        <state relative-caret-position="345">
+          <caret line="503" column="71" lean-forward="false" selection-start-line="503" selection-start-column="71" selection-end-line="503" selection-end-column="71" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <element signature="e#154#281#0" expanded="false" />
@@ -718,8 +718,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="57" column="22" lean-forward="true" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="22" />
+        <state relative-caret-position="390">
+          <caret line="53" column="28" lean-forward="false" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
