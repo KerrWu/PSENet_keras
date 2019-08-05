@@ -2,13 +2,25 @@ import os
 from keras.models import load_model
 from data_generator import test_generator
 
-model_path = ""
-save_dir = ""
+model_path = "./experiments/checkpoints"
+
+model_list = [elem for elem in os.listdir(model_path) if elem.endswith("h5")]
+if len(model_list)>1:
+    print("find multiple models in {}".format(model_path))
+    raise ValueError
+if len(model_list)<1:
+    print("find no model in {}".format(model_path))
+    raise ValueError
+
+model_path = os.path.join(model_path, model_list[0])
+save_dir = "./experiments/results"
 data_generator = test_generator()
 
 model = load_model(model_path)
 count = 0
 try:
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
     with open(os.path.join(save_dir, "predict.txt"), "w") as f:
 
         while True:
