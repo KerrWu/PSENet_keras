@@ -2,6 +2,8 @@ import os
 from keras.models import load_model
 from data_generator import test_generator
 
+os.environ["CUDA_VISIBLE_DEVICES"] = None
+
 model_path = "./experiments/checkpoints"
 
 model_list = [elem for elem in os.listdir(model_path) if elem.endswith("h5")]
