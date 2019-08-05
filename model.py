@@ -28,25 +28,12 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
 
     return A_score, B_score, siamese_score
 
-# def fpn_combine(pair):
-#     deep = pair[0]
-#     shallow = pair[1]
-#     shallow_shape = tf.shape(shallow)
-#     deep_up = tf.image.resize_nearest_neighbor(deep, [shallow_shape[1], shallow_shape[2]])
-#     shallow = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-#                 kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(shallow)
-#     combine_map = shallow + deep_up
-#     combine_out = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-#                 kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(combine_map)
-#     return tf.convert_to_tensor((combine_map, combine_out))
-
 def upsampleing(pair):
     deep = pair[0]
     shallow = pair[1]
     shallow_shape = tf.shape(shallow)
     deep_up = tf.image.resize_nearest_neighbor(deep, [shallow_shape[1], shallow_shape[2]])
     return deep_up
-
 
 def PSENet(myModelConfig):
 
@@ -116,38 +103,6 @@ def PSENet(myModelConfig):
             p3 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3_map)
 
-            # p6_shape = tf.shape(p6)
-            # p7_up = tf.image.resize_nearest_neighbor(p7, [p6_shape[1], p6_shape[2]])
-            # p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
-            # p6_map = p6 + p7_up
-            # p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6_map)
-            #
-            # p5_shape = tf.shape(p5)
-            # p6_up = tf.image.resize_nearest_neighbor(p6, [p5_shape[1], p5_shape[2]])
-            # p5 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5)
-            # p5_map = p5 + p6_up
-            # p5 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5_map)
-            #
-            # p4_shape = tf.shape(p4)
-            # p5_up = tf.image.resize_nearest_neighbor(p5, [p4_shape[1], p4_shape[2]])
-            # p4 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4)
-            # p4_map = p4 + p5_up
-            # p4 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4_map)
-            #
-            # p3_shape = tf.shape(p3)
-            # p4_up = tf.image.resize_nearest_neighbor(p4, [p3_shape[1], p3_shape[2]])
-            # p3 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3)
-            # p3_map = p3 + p4_up
-            # p3 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3_map)
-
             p3_score_map, p3_locate_map = score_refine_module(p3, "p3")
             p4_score_map, p4_locate_map = score_refine_module(p4, "p4")
             p5_score_map, p5_locate_map = score_refine_module(p5, "p5")
@@ -155,42 +110,17 @@ def PSENet(myModelConfig):
             p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
 
 
-            # p3 = base_model.get_layer("activation_22").output
-            # p3_score_map, p3_locate_map = score_refine_module(p3, "p3")
-            #
-            # p4 = base_model.get_layer("activation_40").output
-            # p4_score_map, p4_locate_map = score_refine_module(p4, "p4")
-            #
-            # p5 = base_model.get_layer("activation_49").output
-            # p5_score_map, p5_locate_map = score_refine_module(p5, "p5")
-            #
-            # p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(weight_decay))(base_model.output)
-            # p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(weight_decay))(p6)
-            # p6 = MaxPooling2D(pool_size=(2, 2), padding='same')(p6)
-            # p6_score_map, p6_locate_map = score_refine_module(p6, "p6")
-            #
-            # p7 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(weight_decay))(p6)
-            # p7 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-            #             kernel_regularizer=regularizers.l2(weight_decay))(p7)
-            # p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
-            # p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
+        single_model = Model(inputs=image_input,
+                             outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map, p3_locate_map,
+                                      p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map])
 
-    single_model = Model(inputs=image_input,
-                         outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map, p3_locate_map,
-                                  p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map], name="subnetwork")
-
-    # define siamese network
-    with tf.device('/cpu:0'):
+        # define siamese network
         input_a = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="input_a")
         input_b = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="input_b")
 
-    output_a = single_model(input_a)
-    output_b = single_model(input_b)
+        output_a = single_model(input_a, name="subnetwork_A")
+        output_b = single_model(input_b, name="subnetwork_B")
 
-    with tf.device('/cpu:0'):
         with tf.variable_scope("output", reuse=tf.AUTO_REUSE):
             A_score, B_score, siamese_score = combine_siamese_results(output_a[:5], output_b[:5])
 
