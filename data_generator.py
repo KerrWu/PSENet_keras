@@ -774,3 +774,253 @@ def valid_generator():
 
             else:
                 break
+
+
+def test_generator():
+    import openpyxl
+    import re
+
+    # excel_dir = os.path.join(myModelConfig.data_root, "pasi.xlsx")
+    excel_dir = "./pasi.xlsx"
+    wb = openpyxl.load_workbook(excel_dir)
+    sheet = wb["Sheet1"]
+    patient_dict = dict()
+    patient_list = sheet["A"][1:]
+
+    for elem in patient_list:
+        if isinstance(elem.value, str):
+            patient_dict[elem.value] = dict()
+
+    part_dict = {"D": "头颈部", "I": "躯干部", "N": "上肢", "S": "下肢", "X": "PASI"}
+    for part_index in part_dict.keys():
+
+        if part_index != "X":
+
+            part_name = part_dict[part_index]
+            part_area_index = chr(ord(part_index) + 1)
+            part_ery_index = chr(ord(part_index) + 2)
+            part_sca_index = chr(ord(part_index) + 3)
+            part_ind_index = chr(ord(part_index) + 4)
+
+            part_area = sheet[part_area_index][1:]
+            part_ery = sheet[part_ery_index][1:]
+            part_sca = sheet[part_sca_index][1:]
+            part_ind = sheet[part_ind_index][1:]
+
+            for index, area in enumerate(part_area):
+
+                patient_name = patient_list[index].value
+                cur_area = part_area[index].value
+                cur_ery = part_ery[index].value
+                cur_sca = part_sca[index].value
+                cur_ind = part_ind[index].value
+
+                try:
+                    if isinstance(cur_area, (int, float)):
+                        cur_area = float(cur_area)
+                    elif isinstance(cur_area, str):
+                        cur_area = float(cur_area.strip())
+
+                    if cur_area != 0:
+                        patient_dict[patient_name][part_name] = dict()
+                        patient_dict[patient_name][part_name]["area"] = float(cur_area)
+                        patient_dict[patient_name][part_name]["erythema"] = float(cur_ery)
+                        patient_dict[patient_name][part_name]["scale"] = float(cur_sca)
+                        patient_dict[patient_name][part_name]["induration"] = float(cur_ind)
+
+                except:
+                    continue
+
+        else:
+
+            part_pasi = sheet["X"][1:]
+
+            for index, pasi in enumerate(part_pasi):
+                patient_name = patient_list[index].value
+                try:
+                    patient_dict[patient_name]["pasi"] = float(part_pasi[index].value)
+                except:
+                    continue
+
+    root_dir = myModelConfig.data_root
+    val_file = myModelConfig.train_txt_file
+
+    # root_dir = "G:\\pasi\\pasi_detection"
+    # val_file = "G:\\pasi\\val.txt"
+
+    patient_list = []
+    with open(val_file, 'r', encoding='utf-8') as f:
+        for line in f.readlines():
+            line = line.strip()
+            patient_list.append(line)
+
+    patient_list = [elem for elem in patient_list if os.path.isdir(os.path.join(root_dir, elem))]
+
+    img_list = []
+    txt_list = []
+
+    for elem in patient_list:
+        patient_path = os.path.join(root_dir, elem)
+        _cur_file_list = os.listdir(patient_path)
+        _cur_img_list = [file for file in _cur_file_list if os.path.splitext(file)[-1].lower() == '.jpg']
+        _cur_txt_list = [file[:-3] + 'txt' for file in _cur_img_list]
+
+        cur_img_list = [os.path.join(patient_path, file) for file in _cur_img_list]
+        cur_txt_list = [os.path.join(patient_path, file) for file in _cur_txt_list]
+
+        img_list.extend(cur_img_list)
+        txt_list.extend(cur_txt_list)
+
+    box_list = []
+    for elem in txt_list:
+        cur_box = []
+        with open(elem, 'r', encoding='utf-8') as f:
+            for line in f.readlines():
+                box = line.strip().split(',')
+                box = [int(cord) for cord in box]
+
+                # 将顺序y1 y2 x1 x2 转化为x1 y1 x2 y2
+                # box[0], box[1], box[2], box[3] = box[2], box[0], box[3], box[1]
+                assert len(box) == 4, "failed at %s" % elem
+                assert box[2] > box[0] and box[3] > box[1], elem
+
+                # 将左上右下坐标转化为中心点+wh坐标, 注意这里的坐标点都是未归一化的
+                # center_x = int((box[0]+box[2])/2)
+                # center_y = int((box[1]+box[3])/2)
+                #
+                # w = box[2]-box[0]
+                # h = box[3]-box[1]
+                #
+                # center_box = [center_x, center_y, w, h]
+
+                cur_box.append(box)
+
+        box_list.append(cur_box)
+
+    zip_list = list(zip(img_list, box_list))
+    while True:
+        zip_copy = copy.deepcopy(zip_list)
+        np.random.shuffle(zip_copy)
+
+        img_list_epoch = [elem[0] for elem in zip_copy]
+        box_list_epoch = [elem[1] for elem in zip_copy]
+
+        while len(img_list_epoch) != 0:
+
+            if len(img_list_epoch) >= 2:
+                box1 = box_list_epoch.pop()
+                img1 = img_list_epoch.pop()
+                img1_basename = os.path.basename(img1)
+
+                name1 = img1_basename[:-4]
+
+                try:
+                    patient_name1, part_name1 = tuple(re.split('-|-|/| |\n|\t', name1))
+
+                except:
+                    continue
+
+                if patient_name1 not in patient_dict.keys():
+                    continue
+                if part_name1 not in patient_dict[patient_name1].keys():
+                    continue
+
+                try:
+                    score1_area = patient_dict[patient_name1][part_name1]["area"]
+                except:
+                    score1_area = 0.0
+
+                try:
+                    score1_ery = patient_dict[patient_name1][part_name1]["erythema"]
+                except:
+                    score1_ery = 0.0
+
+                try:
+                    score1_sca = patient_dict[patient_name1][part_name1]["scale"]
+                except:
+                    score1_sca = 0.0
+
+                try:
+                    score1_ind = patient_dict[patient_name1][part_name1]["induration"]
+                except:
+                    score1_ind = 0.0
+
+                try:
+                    score1_pasi = patient_dict[patient_name1]["pasi"]
+                except:
+                    continue
+
+                score1 = [score1_area, score1_ery, score1_sca, score1_ind, score1_pasi]
+                _img1 = Image.open(img1)
+
+                try:
+                    img1, box1 = valid_data_preprocessing(_img1, box1)
+                except:
+                    raise
+
+                map_label1 = get_disease_map_label(box1)
+
+                box2 = box_list_epoch.pop()
+                img2 = img_list_epoch.pop()
+                img2_basename = os.path.basename(img2)
+
+                name2 = img2_basename[:-4]
+
+                try:
+                    patient_name2, part_name2 = tuple(re.split('-|-|/| |\n|\t', name2))
+                except:
+                    continue
+
+                if patient_name2 not in patient_dict.keys():
+                    continue
+                if part_name2 not in patient_dict[patient_name2].keys():
+                    continue
+
+                try:
+                    score2_area = patient_dict[patient_name2][part_name2]["area"]
+                except:
+                    score2_area = 0.0
+
+                try:
+                    score2_ery = patient_dict[patient_name2][part_name2]["erythema"]
+                except:
+                    score2_ery = 0.0
+
+                try:
+                    score2_sca = patient_dict[patient_name2][part_name2]["scale"]
+                except:
+                    score2_sca = 0.0
+
+                try:
+                    score2_ind = patient_dict[patient_name2][part_name2]["induration"]
+                except:
+                    score2_ind = 0.0
+
+                try:
+                    score2_pasi = patient_dict[patient_name2]["pasi"]
+                except:
+                    continue
+
+                score2 = [score2_area, score2_ery, score2_sca, score2_ind, score2_pasi]
+
+                _img2 = Image.open(img2)
+
+                try:
+                    img2, box2 = valid_data_preprocessing(_img2, box2)
+                except:
+                    raise
+
+                map_label2 = get_disease_map_label(box2)
+
+                yield_img = [np.array([img1]), np.array([img2])]
+                yield_label = [[score1], [score2], [[abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]]
+
+                [yield_label.append([elem]) for elem in map_label1]
+                [yield_label.append([elem]) for elem in map_label2]
+
+                # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
+                yield img1, img2, yield_img, yield_label
+                # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
+
+            else:
+                break

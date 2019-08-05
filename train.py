@@ -47,16 +47,7 @@ parallel_model.compile(
     loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05, "subnetwork": 1},
     optimizer=sgd_accu,
     metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "subnetwork": locate_metric})
-# parallel_model.compile(
-#     loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "subnetwork_1": locate_loss,
-#           "subnetwork_2": locate_loss, "subnetwork_3": locate_loss, "subnetwork_4": locate_loss,
-#           "subnetwork_5": locate_loss, "subnetwork_6": locate_loss, "subnetwork_7": locate_loss,
-#           "subnetwork_8": locate_loss, "subnetwork_9": locate_loss, "subnetwork_10": locate_loss},
-#     optimizer=sgd_accu,
-#     metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "subnetwork_1": locate_metric,
-#              "subnetwork_2": locate_metric, "subnetwork_3": locate_metric, "subnetwork_4": locate_metric,
-#              "subnetwork_5": locate_metric, "subnetwork_6": locate_metric, "subnetwork_7": locate_metric,
-#              "subnetwork_8": locate_metric, "subnetwork_9": locate_metric, "subnetwork_10": locate_metric})
+
 print("compiled")
 
 history = None
