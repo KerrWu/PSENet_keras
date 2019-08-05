@@ -1,5 +1,4 @@
 import os
-import tensorflow as tf
 from keras.models import load_model
 from data_generator import test_generator
 
@@ -16,6 +15,7 @@ if len(model_list)<1:
     raise ValueError
 
 model_path = os.path.join(model_path, model_list[0])
+print(model_path)
 save_dir = "./experiments/results"
 data_generator = test_generator()
 
