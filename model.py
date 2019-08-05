@@ -118,8 +118,8 @@ def PSENet(myModelConfig):
         input_a = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="input_a")
         input_b = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="input_b")
 
-        output_a = single_model(input_a, name="subnetwork_A")
-        output_b = single_model(input_b, name="subnetwork_B")
+        output_a = single_model(input_a)
+        output_b = single_model(input_b)
 
         with tf.variable_scope("output", reuse=tf.AUTO_REUSE):
             A_score, B_score, siamese_score = combine_siamese_results(output_a[:5], output_b[:5])
