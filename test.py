@@ -1,4 +1,5 @@
 import os
+import csv
 import tensorflow as tf
 from acc_opt import SGDAccumulate
 from keras.models import load_model
@@ -26,22 +27,40 @@ model = load_model(model_path, custom_objects={"tf": tf, "SGDAccumulate": SGDAcc
                                                "siam_loss": siam_loss, "locate_loss": locate_loss,
                                                "score_metric": score_metric, "locate_metric": locate_metric})
 count = 0
+
+def result_writer(f, img_name, predict_list, label_list):
+
+    row = [img2_name]
+    row.extend(predict_list)
+    row.extend(label_list)
+    f.writerow(row)
+
 try:
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
-    with open(os.path.join(save_dir, "predict.txt"), "w") as f:
+    with open(os.path.join(save_dir, "predict.csv"), "w", newline="") as f:
+        csv_writer =csv.writer(f)
+        head = ["name", "area","erythema","scale","induration", "area_label","erythema_label","scale_label","induration_label"]
+        csv_writer.writerow(head)
 
         while True:
             img1_name, img2_name, img_list, label_list = next(data_generator)
             output = model.predict(img_list, batch_size=1, verbose=0, steps=None)
-            img1_result = [str(elem) for elem in output[0]]
-            img2_result = [str(elem) for elem in output[1]]
-            siam_result = [str(elem) for elem in output[2]]
+            img1_result = [elem for elem in output[0]]
+            label1_list = [elem for elem in label_list[0]]
+
+            img2_result = [elem for elem in output[1]]
+            label2_list = [elem for elem in label_list[1]]
+
+            siam_result = [elem for elem in output[2]]
+            label_siam_list = [elem for elem in label_list[2]]
+
             count += 1
 
-            f.write(img1_name+","+",".join(img1_result))
-            f.write(img2_name + "," + ",".join(img2_result))
-            f.write(img1_name+","+img2_name + "," + ",".join(siam_result))
+            result_writer(csv_writer, img1_name, img1_result, label1_list)
+            result_writer(csv_writer, img1_name, img2_result, label2_list)
+            result_writer(csv_writer, img1_name, siam_result, label_siam_list)
+
             print(img1_name, img2_name)
 
 except StopIteration:
