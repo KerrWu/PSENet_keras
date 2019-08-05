@@ -6,6 +6,8 @@ from acc_opt import SGDAccumulate
 from keras.models import load_model
 from data_generator import test_generator
 from loss_metric import score_loss, siam_loss, locate_loss, score_metric, locate_metric
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
