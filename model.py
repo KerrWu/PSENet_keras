@@ -148,6 +148,14 @@ def PSENet(myModelConfig):
                 p6_score_map, p6_locate_map = score_refine_module(p6, "p6")
                 p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
 
+                print("*******")
+                print(p3)
+                print(p4)
+                print(p5)
+                print(p6)
+                print(p7)
+
+
         single_model = Model(inputs=image_input,
                              outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map,
                                       p3_locate_map, p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map],

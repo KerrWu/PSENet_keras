@@ -324,20 +324,20 @@ def train_generator(batch_size=1):
     train_file = myModelConfig.train_txt_file
 
     # 构建训练数据 list， 其中存放训练病人名
-    patient_list = []
+    train_patient_list = []
     # patient_list = os.listdir(root_dir)
     #
     with open(train_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
             patient_list.append(line)
-    patient_list = [elem for elem in patient_list if os.path.isdir(os.path.join(root_dir, elem))]
+    train_patient_list = [elem for elem in train_patient_list if os.path.isdir(os.path.join(root_dir, elem))]
 
     img_list = []
     txt_list = []
 
     # 按patient_list中的顺序将病人图片名和box标签txt名分别存入list，注意顺序是对应的
-    for elem in patient_list:
+    for elem in train_patient_list:
         patient_path = os.path.join(root_dir, elem)
         _cur_file_list = os.listdir(patient_path)
         _cur_img_list = [file for file in _cur_file_list if os.path.splitext(file)[-1].lower() == '.jpg']
@@ -418,8 +418,8 @@ def train_generator(batch_size=1):
 
                 try:
                     patient_name1, part_name1 = tuple(re.split('-|-|/| |\n|\t', name1))
-
                 except:
+                    print("parse error for patient name {}".format(name1))
                     continue
 
                 if patient_name1 not in patient_dict.keys():
@@ -558,11 +558,13 @@ def train_generator(batch_size=1):
                     yield [np.array(batch_img_a), np.array(batch_img_b)], [np.array(batch_scoreA),
                                                                            np.array(batch_scoreB),
                                                                            np.array(batch_scoreSiam),
+
                                                                            np.array(batch_locate_map_p3_a),
                                                                            np.array(batch_locate_map_p4_a),
                                                                            np.array(batch_locate_map_p5_a),
                                                                            np.array(batch_locate_map_p6_a),
                                                                            np.array(batch_locate_map_p7_a),
+
                                                                            np.array(batch_locate_map_p3_b),
                                                                            np.array(batch_locate_map_p4_b),
                                                                            np.array(batch_locate_map_p5_b),
@@ -595,11 +597,13 @@ def train_generator(batch_size=1):
             yield [np.array(batch_img_a), np.array(batch_img_b)], [np.array(batch_scoreA),
                                                                    np.array(batch_scoreB),
                                                                    np.array(batch_scoreSiam),
+
                                                                    np.array(batch_locate_map_p3_a),
                                                                    np.array(batch_locate_map_p4_a),
                                                                    np.array(batch_locate_map_p5_a),
                                                                    np.array(batch_locate_map_p6_a),
                                                                    np.array(batch_locate_map_p7_a),
+
                                                                    np.array(batch_locate_map_p3_b),
                                                                    np.array(batch_locate_map_p4_b),
                                                                    np.array(batch_locate_map_p5_b),
