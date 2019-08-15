@@ -286,7 +286,7 @@ def train_generator(batch_size=1):
             for index, area in enumerate(part_area):
 
                 patient_name = patient_list[index].value
-                cur_area = part_area[index].value/10.0
+                cur_area = part_area[index].value
                 cur_ery = part_ery[index].value
                 cur_sca = part_sca[index].value
                 cur_ind = part_ind[index].value
@@ -300,7 +300,7 @@ def train_generator(batch_size=1):
 
                     if cur_area != 0:
                         patient_dict[patient_name][part_name] = dict()
-                        patient_dict[patient_name][part_name]["area"] = float(cur_area)
+                        patient_dict[patient_name][part_name]["area"] = float(cur_area)/10.0
                         patient_dict[patient_name][part_name]["erythema"] = float(cur_ery)
                         patient_dict[patient_name][part_name]["scale"] = float(cur_sca)
                         patient_dict[patient_name][part_name]["induration"] = float(cur_ind)
