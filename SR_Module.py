@@ -89,6 +89,6 @@ def score_refine_module(input_feature_map, map_name=None):
                             name=map_name + "_locate",
                             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(locate_head)
 
-        refined_map = Multiply()([score_map, locate_map])
+        refined_map = Multiply(name=map_name+"refine_score_map")([score_map, locate_map])
 
     return refined_map, locate_map
