@@ -150,7 +150,8 @@ def PSENet(myModelConfig):
 
         single_model = Model(inputs=image_input,
                              outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map,
-                                      p3_locate_map, p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map])
+                                      p3_locate_map, p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map],
+                             name="single_model")
 
         # define siamese network
         input_a = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="input_a")
