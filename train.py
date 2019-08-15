@@ -89,6 +89,7 @@ try:
                                            validation_data=valid_gen,
                                            validation_steps=steps_per_epoch_val,
                                            max_queue_size=32,
+                                           use_multiprocessing=True,
                                            initial_epoch=0)
 
 except KeyboardInterrupt:

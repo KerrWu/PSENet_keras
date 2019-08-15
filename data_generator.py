@@ -1,7 +1,9 @@
 import numpy as np
 import os
+import re
 from PIL import Image, ImageEnhance
 import copy
+import openpyxl
 from global_var import myModelConfig
 
 
@@ -242,9 +244,7 @@ def train_data_preprocessing(origin_img, gt_box):
     return img, gt_box
 
 
-def train_generator(batch_size=1):
-    import openpyxl
-    import re
+def build_patient_dict():
 
     excel_dir = myModelConfig.excel_path
     wb = openpyxl.load_workbook(excel_dir)
@@ -300,7 +300,7 @@ def train_generator(batch_size=1):
 
                     if cur_area != 0:
                         patient_dict[patient_name][part_name] = dict()
-                        patient_dict[patient_name][part_name]["area"] = float(cur_area)/10.0
+                        patient_dict[patient_name][part_name]["area"] = float(cur_area) / 10.0
                         patient_dict[patient_name][part_name]["erythema"] = float(cur_ery)
                         patient_dict[patient_name][part_name]["scale"] = float(cur_sca)
                         patient_dict[patient_name][part_name]["induration"] = float(cur_ind)
@@ -319,6 +319,10 @@ def train_generator(batch_size=1):
                     patient_dict[patient_name]["pasi"] = float(part_pasi[index].value)
                 except:
                     continue
+
+patient_dict = build_patient_dict()
+
+def train_generator(batch_size=1):
 
     root_dir = myModelConfig.data_root
     train_file = myModelConfig.train_txt_file
@@ -612,91 +616,15 @@ def train_generator(batch_size=1):
 
 
 def valid_generator(batch_size=1):
-    import openpyxl
-    import re
-
-    excel_dir = myModelConfig.excel_path
-    wb = openpyxl.load_workbook(excel_dir)
-    sheet = wb["Sheet1"]
-    patient_dict = dict()
-    patient_list = sheet["A"][1:]
-
-    for elem in patient_list:
-        if isinstance(elem.value, str):
-            patient_dict[elem.value] = dict()
-
-    part_dict = {"D": "头颈部", "I": "躯干部", "N": "上肢", "S": "下肢", "X": "PASI"}
-
-    # 构建patient_dict
-    # 一个嵌套的dict，最外层key=patient name， value为不同part
-    # 次内层不同part dict的key为part name或者pasi总分， value为4个分值dict或者pasi总分值
-    # 最内层不同分值 dict的key为分值名， value为分值
-
-    # 构建顺序为根据不同部位构建
-    for part_index in part_dict.keys():
-
-        # 判断当前处理的part不是pasi总分
-        if part_index != "X":
-
-            # 根据index取得该part的4个不同分值对应在excel里的位置
-            part_name = part_dict[part_index]
-            part_area_index = chr(ord(part_index) + 1)
-            part_ery_index = chr(ord(part_index) + 2)
-            part_sca_index = chr(ord(part_index) + 3)
-            part_ind_index = chr(ord(part_index) + 4)
-
-            # 取得该part的所有病人的4个不同分值
-            part_area = sheet[part_area_index][1:]
-            part_ery = sheet[part_ery_index][1:]
-            part_sca = sheet[part_sca_index][1:]
-            part_ind = sheet[part_ind_index][1:]
-
-            # 将不同病人的不同分值加入到对应的part_area字典里
-            for index, area in enumerate(part_area):
-
-                patient_name = patient_list[index].value
-                cur_area = part_area[index].value
-                cur_ery = part_ery[index].value
-                cur_sca = part_sca[index].value
-                cur_ind = part_ind[index].value
-
-                # 如果面积为0，那么其他几个分值一定为0，直接不处理
-                try:
-                    if isinstance(cur_area, (int, float)):
-                        cur_area = float(cur_area)
-                    elif isinstance(cur_area, str):
-                        cur_area = float(cur_area.strip())
-
-                    if cur_area != 0:
-                        patient_dict[patient_name][part_name] = dict()
-                        patient_dict[patient_name][part_name]["area"] = float(cur_area)/10.0
-                        patient_dict[patient_name][part_name]["erythema"] = float(cur_ery)
-                        patient_dict[patient_name][part_name]["scale"] = float(cur_sca)
-                        patient_dict[patient_name][part_name]["induration"] = float(cur_ind)
-
-                except:
-                    continue
-
-        else:
-
-            # 当前part如果是pasi总分，那就在该病人的dict中加入一个pasi dict
-            part_pasi = sheet["X"][1:]
-
-            for index, pasi in enumerate(part_pasi):
-                patient_name = patient_list[index].value
-                try:
-                    patient_dict[patient_name]["pasi"] = float(part_pasi[index].value)
-                except:
-                    continue
 
     root_dir = myModelConfig.data_root
-    train_file = myModelConfig.val_txt_file
+    val_file = myModelConfig.val_txt_file
 
     # 构建训练数据 list， 其中存放训练病人名
     val_patient_list = []
     # patient_list = os.listdir(root_dir)
     #
-    with open(train_file, 'r') as f:
+    with open(val_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
             val_patient_list.append(line)
