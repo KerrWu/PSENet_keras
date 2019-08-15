@@ -6,7 +6,8 @@ from global_var import myModelConfig
 
 
 def score_refine_module(input_feature_map, map_name=None):
-    with tf.variable_scope("score_refine_module", reuse=tf.AUTO_REUSE):
+    
+    with tf.variable_scope("score_refine_module" + map_name, reuse=tf.AUTO_REUSE):
 
         if keras.backend.image_data_format() == 'channels_last':
             bn_axis = 3
@@ -84,14 +85,9 @@ def score_refine_module(input_feature_map, map_name=None):
         locate_head = BatchNormalization(axis=bn_axis, name='bn_l1_3')(locate_head)
         locate_head = Activation('relu')(locate_head)
 
-
-        if map_name == None:
-            locate_map = Conv2D(1, (1, 1), padding='same', activation="sigmoid", kernel_initializer='he_normal',
-                                kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(locate_head)
-        else:
-            locate_map = Conv2D(1, (1, 1), padding='same', activation="sigmoid", kernel_initializer='he_normal',
-                                name=map_name + "_locate",
-                                kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(locate_head)
+        locate_map = Conv2D(1, (1, 1), padding='same', activation="sigmoid", kernel_initializer='he_normal',
+                            name=map_name + "_locate",
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(locate_head)
 
         refined_map = Multiply()([score_map, locate_map])
 
