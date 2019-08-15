@@ -108,7 +108,7 @@ def PSENet(myModelConfig):
                 p5 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
                             kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5)
                 p5 = BatchNormalization(axis=bn_axis, name='bn_p5_reduce')(p5)
-                p6 = Activation('relu')(p5)
+                p5 = Activation('relu')(p5)
 
                 p5_map = Add()([p5, p6_up])
                 p5 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
@@ -147,14 +147,6 @@ def PSENet(myModelConfig):
                 p5_score_map, p5_locate_map = score_refine_module(p5, "p5")
                 p6_score_map, p6_locate_map = score_refine_module(p6, "p6")
                 p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
-
-                print("*******")
-                print(p3)
-                print(p4)
-                print(p5)
-                print(p6)
-                print(p7)
-
 
         single_model = Model(inputs=image_input,
                              outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map,
