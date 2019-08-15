@@ -242,7 +242,7 @@ def train_data_preprocessing(origin_img, gt_box):
     return img, gt_box
 
 
-def train_generator():
+def train_generator(batch_size=1):
     import openpyxl
     import re
 
@@ -390,6 +390,9 @@ def train_generator():
         img_list_epoch = [elem[0] for elem in zip_copy]
         box_list_epoch = [elem[1] for elem in zip_copy]
 
+        batch_img = []
+        batch_label = []
+
         while len(img_list_epoch) != 0:
 
             if len(img_list_epoch) >= 2:
@@ -512,18 +515,32 @@ def train_generator():
 
                 map_label2 = get_disease_map_label(box2)
 
-                yield_img = [np.array([img1]), np.array([img2])]
-                yield_label = [[score1], [score2], [[abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]]
+                yield_img = [np.array(img1), np.array(img2)]
+                yield_label = [score1, score2, [abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]
 
-                [yield_label.append([elem]) for elem in map_label1]
-                [yield_label.append([elem]) for elem in map_label2]
+                [yield_label.append(elem) for elem in map_label1]
+                [yield_label.append(elem) for elem in map_label2]
 
-                # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                yield yield_img, yield_label
-                # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
+                batch_img.append(yield_img)
+                batch_label.append(yield_label)
 
+                if len(batch_label)==batch_size:
+                    # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
+                    yield batch_img, batch_label
+
+                    batch_img = []
+                    batch_label = []
+                    # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
+                else:
+                    continue
             else:
                 break
+
+        if len(batch_img)>0:
+            yield batch_img, batch_label
+
+
+
 
 
 def valid_generator():
