@@ -515,14 +515,14 @@ def train_generator(batch_size=1):
 
                 map_label2 = get_disease_map_label(box2)
 
-                yield_img = [np.array(img1), np.array(img2)]
+                yield_img = np.[np.array(img1), np.array(img2)]
                 yield_label = [score1, score2, [abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]
 
                 [yield_label.append(elem) for elem in map_label1]
                 [yield_label.append(elem) for elem in map_label2]
 
-                batch_img.append(yield_img)
-                batch_label.append(yield_label)
+                batch_img.append(np.array(yield_img))
+                batch_label.append(np.array(yield_label))
 
                 if len(batch_label)==batch_size:
                     # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
