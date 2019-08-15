@@ -611,12 +611,11 @@ def train_generator(batch_size=1):
                                                                    np.array(batch_locate_map_p7_b)]
 
 
-def valid_generator():
+def valid_generator(batch_size=1):
     import openpyxl
     import re
 
-    # excel_dir = os.path.join(myModelConfig.data_root, "pasi.xlsx")
-    excel_dir = "./pasi.xlsx"
+    excel_dir = myModelConfig.excel_path
     wb = openpyxl.load_workbook(excel_dir)
     sheet = wb["Sheet1"]
     patient_dict = dict()
@@ -627,21 +626,32 @@ def valid_generator():
             patient_dict[elem.value] = dict()
 
     part_dict = {"D": "头颈部", "I": "躯干部", "N": "上肢", "S": "下肢", "X": "PASI"}
+
+    # 构建patient_dict
+    # 一个嵌套的dict，最外层key=patient name， value为不同part
+    # 次内层不同part dict的key为part name或者pasi总分， value为4个分值dict或者pasi总分值
+    # 最内层不同分值 dict的key为分值名， value为分值
+
+    # 构建顺序为根据不同部位构建
     for part_index in part_dict.keys():
 
+        # 判断当前处理的part不是pasi总分
         if part_index != "X":
 
+            # 根据index取得该part的4个不同分值对应在excel里的位置
             part_name = part_dict[part_index]
             part_area_index = chr(ord(part_index) + 1)
             part_ery_index = chr(ord(part_index) + 2)
             part_sca_index = chr(ord(part_index) + 3)
             part_ind_index = chr(ord(part_index) + 4)
 
+            # 取得该part的所有病人的4个不同分值
             part_area = sheet[part_area_index][1:]
             part_ery = sheet[part_ery_index][1:]
             part_sca = sheet[part_sca_index][1:]
             part_ind = sheet[part_ind_index][1:]
 
+            # 将不同病人的不同分值加入到对应的part_area字典里
             for index, area in enumerate(part_area):
 
                 patient_name = patient_list[index].value
@@ -650,6 +660,7 @@ def valid_generator():
                 cur_sca = part_sca[index].value
                 cur_ind = part_ind[index].value
 
+                # 如果面积为0，那么其他几个分值一定为0，直接不处理
                 try:
                     if isinstance(cur_area, (int, float)):
                         cur_area = float(cur_area)
@@ -658,7 +669,7 @@ def valid_generator():
 
                     if cur_area != 0:
                         patient_dict[patient_name][part_name] = dict()
-                        patient_dict[patient_name][part_name]["area"] = float(cur_area)
+                        patient_dict[patient_name][part_name]["area"] = float(cur_area)/10.0
                         patient_dict[patient_name][part_name]["erythema"] = float(cur_ery)
                         patient_dict[patient_name][part_name]["scale"] = float(cur_sca)
                         patient_dict[patient_name][part_name]["induration"] = float(cur_ind)
@@ -668,6 +679,7 @@ def valid_generator():
 
         else:
 
+            # 当前part如果是pasi总分，那就在该病人的dict中加入一个pasi dict
             part_pasi = sheet["X"][1:]
 
             for index, pasi in enumerate(part_pasi):
@@ -678,23 +690,23 @@ def valid_generator():
                     continue
 
     root_dir = myModelConfig.data_root
-    val_file = myModelConfig.val_txt_file
+    train_file = myModelConfig.val_txt_file
 
-    # root_dir = "G:\\pasi\\pasi_detection"
-    # val_file = "G:\\pasi\\val.txt"
-
-    patient_list = []
-    with open(val_file, 'r', encoding='utf-8') as f:
+    # 构建训练数据 list， 其中存放训练病人名
+    val_patient_list = []
+    # patient_list = os.listdir(root_dir)
+    #
+    with open(train_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
-            patient_list.append(line)
-
-    patient_list = [elem for elem in patient_list if os.path.isdir(os.path.join(root_dir, elem))]
+            val_patient_list.append(line)
+    val_patient_list = [elem for elem in val_patient_list if os.path.isdir(os.path.join(root_dir, elem))]
 
     img_list = []
     txt_list = []
 
-    for elem in patient_list:
+    # 按patient_list中的顺序将病人图片名和box标签txt名分别存入list，注意顺序是对应的
+    for elem in val_patient_list:
         patient_path = os.path.join(root_dir, elem)
         _cur_file_list = os.listdir(patient_path)
         _cur_img_list = [file for file in _cur_file_list if os.path.splitext(file)[-1].lower() == '.jpg']
@@ -706,10 +718,11 @@ def valid_generator():
         img_list.extend(cur_img_list)
         txt_list.extend(cur_txt_list)
 
+    # 将txt标签中的box解析为坐标值
     box_list = []
     for elem in txt_list:
         cur_box = []
-        with open(elem, 'r', encoding='utf-8') as f:
+        with open(elem, 'r') as f:
             for line in f.readlines():
                 box = line.strip().split(',')
                 box = [int(cord) for cord in box]
@@ -732,17 +745,40 @@ def valid_generator():
 
         box_list.append(cur_box)
 
+    # 得到最终的训练数据zip，之后每个训练sample就是zip中的一个item，分别为图片名和该图片的box
     zip_list = list(zip(img_list, box_list))
+
     while True:
+
         zip_copy = copy.deepcopy(zip_list)
         np.random.shuffle(zip_copy)
 
         img_list_epoch = [elem[0] for elem in zip_copy]
         box_list_epoch = [elem[1] for elem in zip_copy]
 
+        batch_img_a = []
+        batch_img_b = []
+
+        batch_scoreA = []
+        batch_scoreB = []
+        batch_scoreSiam = []
+
+        batch_locate_map_p3_a = []
+        batch_locate_map_p4_a = []
+        batch_locate_map_p5_a = []
+        batch_locate_map_p6_a = []
+        batch_locate_map_p7_a = []
+
+        batch_locate_map_p3_b = []
+        batch_locate_map_p4_b = []
+        batch_locate_map_p5_b = []
+        batch_locate_map_p6_b = []
+        batch_locate_map_p7_b = []
+
         while len(img_list_epoch) != 0:
 
             if len(img_list_epoch) >= 2:
+
                 box1 = box_list_epoch.pop()
                 img1 = img_list_epoch.pop()
                 img1_basename = os.path.basename(img1)
@@ -751,45 +787,52 @@ def valid_generator():
 
                 try:
                     patient_name1, part_name1 = tuple(re.split('-|-|/| |\n|\t', name1))
-
                 except:
+                    print("parse error for patient name {}".format(name1))
                     continue
 
                 if patient_name1 not in patient_dict.keys():
+                    print("patient {} not in patient dict".format(patient_name1))
                     continue
                 if part_name1 not in patient_dict[patient_name1].keys():
+                    print("part {} not in patient {}'s dict".format(part_name1, patient_name1))
                     continue
 
                 try:
                     score1_area = patient_dict[patient_name1][part_name1]["area"]
                 except:
+                    print("area not in patient {}'s {} dict".format(patient_name1, part_name1))
                     score1_area = 0.0
 
                 try:
                     score1_ery = patient_dict[patient_name1][part_name1]["erythema"]
                 except:
+                    print("ery not in patient {}'s {} dict".format(patient_name1, part_name1))
                     score1_ery = 0.0
 
                 try:
                     score1_sca = patient_dict[patient_name1][part_name1]["scale"]
                 except:
+                    print("sca not in patient {}'s {} dict".format(patient_name1, part_name1))
                     score1_sca = 0.0
 
                 try:
                     score1_ind = patient_dict[patient_name1][part_name1]["induration"]
                 except:
+                    print("ind not in patient {}'s {} dict".format(patient_name1, part_name1))
                     score1_ind = 0.0
 
                 try:
                     score1_pasi = patient_dict[patient_name1]["pasi"]
                 except:
+                    print("pasi not in patient {}'s dict".format(patient_name1))
                     continue
 
                 score1 = [score1_area, score1_ery, score1_sca, score1_ind, score1_pasi]
                 _img1 = Image.open(img1)
 
                 try:
-                    img1, box1 = valid_data_preprocessing(_img1, box1)
+                    img1, box1 = train_data_preprocessing(_img1, box1)
                 except:
                     raise
 
@@ -807,33 +850,40 @@ def valid_generator():
                     continue
 
                 if patient_name2 not in patient_dict.keys():
+                    print("patient {} not in patient dict".format(patient_name2))
                     continue
                 if part_name2 not in patient_dict[patient_name2].keys():
+                    print("part {} not in patient {}'s dict".format(part_name2, patient_name2))
                     continue
 
                 try:
                     score2_area = patient_dict[patient_name2][part_name2]["area"]
                 except:
+                    print("area not in patient {}'s {} dict".format(patient_name2, part_name2))
                     score2_area = 0.0
 
                 try:
                     score2_ery = patient_dict[patient_name2][part_name2]["erythema"]
                 except:
+                    print("ery not in patient {}'s {} dict".format(patient_name2, part_name2))
                     score2_ery = 0.0
 
                 try:
                     score2_sca = patient_dict[patient_name2][part_name2]["scale"]
                 except:
+                    print("sca not in patient {}'s {} dict".format(patient_name2, part_name2))
                     score2_sca = 0.0
 
                 try:
                     score2_ind = patient_dict[patient_name2][part_name2]["induration"]
                 except:
+                    print("ind not in patient {}'s {} dict".format(patient_name2, part_name2))
                     score2_ind = 0.0
 
                 try:
                     score2_pasi = patient_dict[patient_name2]["pasi"]
                 except:
+                    print("pasi not in patient {}'s dict".format(patient_name2))
                     continue
 
                 score2 = [score2_area, score2_ery, score2_sca, score2_ind, score2_pasi]
@@ -841,24 +891,93 @@ def valid_generator():
                 _img2 = Image.open(img2)
 
                 try:
-                    img2, box2 = valid_data_preprocessing(_img2, box2)
+                    img2, box2 = train_data_preprocessing(_img2, box2)
                 except:
                     raise
 
                 map_label2 = get_disease_map_label(box2)
 
-                yield_img = [np.array([img1]), np.array([img2])]
-                yield_label = [[score1], [score2], [[abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]]
+                # yield_img = [np.array(img1), np.array(img2)]
+                # yield_label = [score1, score2, [abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]
 
-                [yield_label.append([elem]) for elem in map_label1]
-                [yield_label.append([elem]) for elem in map_label2]
+                # [yield_label.append(elem) for elem in map_label1]
+                # [yield_label.append(elem) for elem in map_label2]
 
-                # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                yield yield_img, yield_label
-                # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
+                batch_img_a.append(np.array(img1))
+                batch_img_b.append(np.array(img2))
 
+                batch_scoreA.append(score1)
+                batch_scoreB.append(score2)
+                batch_scoreSiam.append([abs(elem[0] - elem[1]) for elem in zip(score1, score2)])
+
+                batch_locate_map_p3_a.append(map_label1[0])
+                batch_locate_map_p4_a.append(map_label1[1])
+                batch_locate_map_p5_a.append(map_label1[2])
+                batch_locate_map_p6_a.append(map_label1[3])
+                batch_locate_map_p7_a.append(map_label1[4])
+
+                batch_locate_map_p3_b.append(map_label2[0])
+                batch_locate_map_p4_b.append(map_label2[1])
+                batch_locate_map_p5_b.append(map_label2[2])
+                batch_locate_map_p6_b.append(map_label2[3])
+                batch_locate_map_p7_b.append(map_label2[4])
+
+                if len(batch_img_a) == batch_size:
+                    # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
+                    yield [np.array(batch_img_a), np.array(batch_img_b)], [np.array(batch_scoreA),
+                                                                           np.array(batch_scoreB),
+                                                                           np.array(batch_scoreSiam),
+
+                                                                           np.array(batch_locate_map_p3_a),
+                                                                           np.array(batch_locate_map_p4_a),
+                                                                           np.array(batch_locate_map_p5_a),
+                                                                           np.array(batch_locate_map_p6_a),
+                                                                           np.array(batch_locate_map_p7_a),
+
+                                                                           np.array(batch_locate_map_p3_b),
+                                                                           np.array(batch_locate_map_p4_b),
+                                                                           np.array(batch_locate_map_p5_b),
+                                                                           np.array(batch_locate_map_p6_b),
+                                                                           np.array(batch_locate_map_p7_b)]
+
+                    batch_img_a.clear()
+                    batch_img_b.clear()
+
+                    batch_scoreA.clear()
+                    batch_scoreB.clear()
+                    batch_scoreSiam.clear()
+                    batch_locate_map_p3_a.clear()
+                    batch_locate_map_p4_a.clear()
+                    batch_locate_map_p5_a.clear()
+                    batch_locate_map_p6_a.clear()
+                    batch_locate_map_p7_a.clear()
+                    batch_locate_map_p3_b.clear()
+                    batch_locate_map_p4_b.clear()
+                    batch_locate_map_p5_b.clear()
+                    batch_locate_map_p6_b.clear()
+                    batch_locate_map_p7_b.clear()
+                    # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
+                else:
+                    continue
             else:
                 break
+
+        if len(batch_img_a) + len(batch_img_b) > 0:
+            yield [np.array(batch_img_a), np.array(batch_img_b)], [np.array(batch_scoreA),
+                                                                   np.array(batch_scoreB),
+                                                                   np.array(batch_scoreSiam),
+
+                                                                   np.array(batch_locate_map_p3_a),
+                                                                   np.array(batch_locate_map_p4_a),
+                                                                   np.array(batch_locate_map_p5_a),
+                                                                   np.array(batch_locate_map_p6_a),
+                                                                   np.array(batch_locate_map_p7_a),
+
+                                                                   np.array(batch_locate_map_p3_b),
+                                                                   np.array(batch_locate_map_p4_b),
+                                                                   np.array(batch_locate_map_p5_b),
+                                                                   np.array(batch_locate_map_p6_b),
+                                                                   np.array(batch_locate_map_p7_b)]
 
 
 def test_generator():
