@@ -53,7 +53,8 @@ parallel_model.compile(
           "single_model_6": locate_loss,
           "single_model_7": locate_loss,
           "single_model_8": locate_loss,
-          "single_model_9": locate_loss,},
+          "single_model_9": locate_loss,
+          "single_model_10": locate_loss},
     loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05,
                   "single_model_1": 1,
                   "single_model_2": 1,
@@ -63,7 +64,8 @@ parallel_model.compile(
                   "single_model_6": 1,
                   "single_model_7": 1,
                   "single_model_8": 1,
-                  "single_model_9": 1},
+                  "single_model_9": 1,
+                  "single_model_10": 1},
     optimizer=sgd_accu,
     metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric,
              "single_model_1": locate_metric,
@@ -74,7 +76,8 @@ parallel_model.compile(
              "single_model_6": locate_metric,
              "single_model_7": locate_metric,
              "single_model_8": locate_metric,
-             "single_model_9": locate_metric,})
+             "single_model_9": locate_metric,
+             "single_model_10": locate_metric,})
 
 print("compiled")
 
