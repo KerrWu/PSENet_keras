@@ -88,7 +88,7 @@ try:
                                            callbacks=my_call_back,
                                            validation_data=valid_gen,
                                            validation_steps=steps_per_epoch_val,
-                                           max_queue_size=16,
+                                           max_queue_size=32,
                                            initial_epoch=0)
 
 except KeyboardInterrupt:
