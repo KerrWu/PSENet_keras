@@ -390,7 +390,8 @@ def train_generator(batch_size=1):
         img_list_epoch = [elem[0] for elem in zip_copy]
         box_list_epoch = [elem[1] for elem in zip_copy]
 
-        batch_img = []
+        batch_img_a = []
+        batch_img_b = []
         batch_label = []
 
         while len(img_list_epoch) != 0:
@@ -515,20 +516,22 @@ def train_generator(batch_size=1):
 
                 map_label2 = get_disease_map_label(box2)
 
-                yield_img = [np.array(img1), np.array(img2)]
+                # yield_img = [np.array(img1), np.array(img2)]
                 yield_label = [score1, score2, [abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]
 
                 [yield_label.append(elem) for elem in map_label1]
                 [yield_label.append(elem) for elem in map_label2]
 
-                batch_img.append(np.array(yield_img))
+                batch_img_a.append(np.array(img1))
+                batch_img_b.append(np.array(img2))
                 batch_label.append(np.array(yield_label))
 
                 if len(batch_label)==batch_size:
                     # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                    yield batch_img, batch_label
+                    yield [np.array(batch_img_a), np.array(batch_img_b)], batch_label
 
-                    batch_img = []
+                    batch_img_a = []
+                    batch_img_b = []
                     batch_label = []
                     # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
                 else:
@@ -536,8 +539,8 @@ def train_generator(batch_size=1):
             else:
                 break
 
-        if len(batch_img)>0:
-            yield batch_img, batch_label
+        if len(batch_img_a)+len(batch_img_b)>0:
+            yield [batch_img_a, batch_img_b], batch_label
 
 
 
