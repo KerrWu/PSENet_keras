@@ -276,13 +276,11 @@ def train_generator(batch_size=1):
             part_sca_index = chr(ord(part_index) + 3)
             part_ind_index = chr(ord(part_index) + 4)
 
-
             # 取得该part的所有病人的4个不同分值
             part_area = sheet[part_area_index][1:]
             part_ery = sheet[part_ery_index][1:]
             part_sca = sheet[part_sca_index][1:]
             part_ind = sheet[part_ind_index][1:]
-
 
             # 将不同病人的不同分值加入到对应的part_area字典里
             for index, area in enumerate(part_area):
@@ -324,7 +322,6 @@ def train_generator(batch_size=1):
 
     root_dir = myModelConfig.data_root
     train_file = myModelConfig.train_txt_file
-
 
     # 构建训练数据 list， 其中存放训练病人名
     patient_list = []
@@ -392,7 +389,22 @@ def train_generator(batch_size=1):
 
         batch_img_a = []
         batch_img_b = []
-        batch_label = []
+
+        batch_scoreA = []
+        batch_scoreB = []
+        batch_scoreSiam = []
+
+        batch_locate_map_p3_a = []
+        batch_locate_map_p4_a = []
+        batch_locate_map_p5_a = []
+        batch_locate_map_p6_a = []
+        batch_locate_map_p7_a = []
+
+        batch_locate_map_p3_b = []
+        batch_locate_map_p4_b = []
+        batch_locate_map_p5_b = []
+        batch_locate_map_p6_b = []
+        batch_locate_map_p7_b = []
 
         while len(img_list_epoch) != 0:
 
@@ -517,33 +529,67 @@ def train_generator(batch_size=1):
                 map_label2 = get_disease_map_label(box2)
 
                 # yield_img = [np.array(img1), np.array(img2)]
-                yield_label = [score1, score2, [abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]
+                # yield_label = [score1, score2, [abs(elem[0] - elem[1]) for elem in zip(score1, score2)]]
 
-                [yield_label.append(elem) for elem in map_label1]
-                [yield_label.append(elem) for elem in map_label2]
+                # [yield_label.append(elem) for elem in map_label1]
+                # [yield_label.append(elem) for elem in map_label2]
 
                 batch_img_a.append(np.array(img1))
                 batch_img_b.append(np.array(img2))
-                batch_label.append(np.array(yield_label))
 
-                if len(batch_label)==batch_size:
+                batch_scoreA.append(score1)
+                batch_scoreB.append(score2)
+                batch_scoreSiam.append([abs(elem[0] - elem[1]) for elem in zip(score1, score2)])
+
+                batch_locate_map_p3_a.append(map_label1[0])
+                batch_locate_map_p4_a.append(map_label1[1])
+                batch_locate_map_p5_a.append(map_label1[2])
+                batch_locate_map_p6_a.append(map_label1[3])
+                batch_locate_map_p7_a.append(map_label1[4])
+
+                batch_locate_map_p3_b.append(map_label2[0])
+                batch_locate_map_p4_b.append(map_label2[1])
+                batch_locate_map_p5_b.append(map_label2[2])
+                batch_locate_map_p6_b.append(map_label2[3])
+                batch_locate_map_p7_b.append(map_label2[4])
+
+                if len(batch_img_a) == batch_size:
                     # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                    yield [np.array(batch_img_a), np.array(batch_img_b)], batch_label
+                    yield [np.array(batch_img_a), np.array(batch_img_b)], [batch_scoreA, batch_scoreB, batch_scoreSiam,
+                                                                           batch_locate_map_p3_a,
+                                                                           batch_locate_map_p4_a,
+                                                                           batch_locate_map_p5_a,
+                                                                           batch_locate_map_p6_a,
+                                                                           batch_locate_map_p7_a,
+                                                                           batch_locate_map_p3_b,
+                                                                           batch_locate_map_p4_b,
+                                                                           batch_locate_map_p5_b,
+                                                                           batch_locate_map_p6_b,
+                                                                           batch_locate_map_p7_b]
 
-                    batch_img_a = []
-                    batch_img_b = []
-                    batch_label = []
+                    batch_img_a.clear()
+                    batch_img_b.clear()
+                    batch_scoreA.clear()
+                    batch_scoreB.clear()
+                    batch_scoreSiam.clear()
+                    batch_locate_map_p3_a.clear()
+                    batch_locate_map_p4_a.clear()
+                    batch_locate_map_p5_a.clear()
+                    batch_locate_map_p6_a.clear()
+                    batch_locate_map_p7_a.clear()
+                    batch_locate_map_p3_b.clear()
+                    batch_locate_map_p4_b.clear()
+                    batch_locate_map_p5_b.clear()
+                    batch_locate_map_p6_b.clear()
+                    batch_locate_map_p7_b.clear()
                     # yield img1, img2, score1, score2, abs(score1-score2), map_label1[:], map_label2[:]
                 else:
                     continue
             else:
                 break
 
-        if len(batch_img_a)+len(batch_img_b)>0:
+        if len(batch_img_a) + len(batch_img_b) > 0:
             yield [batch_img_a, batch_img_b], batch_label
-
-
-
 
 
 def valid_generator():
@@ -994,7 +1040,7 @@ def test_generator():
                 continue
 
             try:
-                score2_area = patient_dict[patient_name2][part_name2]["area"]/10.0
+                score2_area = patient_dict[patient_name2][part_name2]["area"] / 10.0
             except:
                 score2_area = 0.0
 
