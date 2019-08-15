@@ -555,20 +555,23 @@ def train_generator(batch_size=1):
 
                 if len(batch_img_a) == batch_size:
                     # yield ({"input_a": img1, "input_b": img2},{"scoreA": score1, "scoreB": score2, "scoreSiam": abs(score1 - score2)})
-                    yield [np.array(batch_img_a), np.array(batch_img_b)], [batch_scoreA, batch_scoreB, batch_scoreSiam,
-                                                                           batch_locate_map_p3_a,
-                                                                           batch_locate_map_p4_a,
-                                                                           batch_locate_map_p5_a,
-                                                                           batch_locate_map_p6_a,
-                                                                           batch_locate_map_p7_a,
-                                                                           batch_locate_map_p3_b,
-                                                                           batch_locate_map_p4_b,
-                                                                           batch_locate_map_p5_b,
-                                                                           batch_locate_map_p6_b,
-                                                                           batch_locate_map_p7_b]
+                    yield [np.array(batch_img_a), np.array(batch_img_b)], [np.array(batch_scoreA),
+                                                                           np.array(batch_scoreB),
+                                                                           np.array(batch_scoreSiam),
+                                                                           np.array(batch_locate_map_p3_a),
+                                                                           np.array(batch_locate_map_p4_a),
+                                                                           np.array(batch_locate_map_p5_a),
+                                                                           np.array(batch_locate_map_p6_a),
+                                                                           np.array(batch_locate_map_p7_a),
+                                                                           np.array(batch_locate_map_p3_b),
+                                                                           np.array(batch_locate_map_p4_b),
+                                                                           np.array(batch_locate_map_p5_b),
+                                                                           np.array(batch_locate_map_p6_b),
+                                                                           np.array(batch_locate_map_p7_b)]
 
                     batch_img_a.clear()
                     batch_img_b.clear()
+
                     batch_scoreA.clear()
                     batch_scoreB.clear()
                     batch_scoreSiam.clear()
@@ -589,7 +592,19 @@ def train_generator(batch_size=1):
                 break
 
         if len(batch_img_a) + len(batch_img_b) > 0:
-            yield [batch_img_a, batch_img_b], batch_label
+            yield [np.array(batch_img_a), np.array(batch_img_b)], [np.array(batch_scoreA),
+                                                                   np.array(batch_scoreB),
+                                                                   np.array(batch_scoreSiam),
+                                                                   np.array(batch_locate_map_p3_a),
+                                                                   np.array(batch_locate_map_p4_a),
+                                                                   np.array(batch_locate_map_p5_a),
+                                                                   np.array(batch_locate_map_p6_a),
+                                                                   np.array(batch_locate_map_p7_a),
+                                                                   np.array(batch_locate_map_p3_b),
+                                                                   np.array(batch_locate_map_p4_b),
+                                                                   np.array(batch_locate_map_p5_b),
+                                                                   np.array(batch_locate_map_p6_b),
+                                                                   np.array(batch_locate_map_p7_b)]
 
 
 def valid_generator():
