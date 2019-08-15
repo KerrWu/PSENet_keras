@@ -44,11 +44,37 @@ myTensorboard = callbacks.TensorBoard(log_dir=myModelConfig.summary_dir, histogr
 
 my_call_back = [my_early_stop, reduce_lr, myTensorboard]
 parallel_model.compile(
-    loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "single_model_*": locate_loss,
-          "single_model_1": locate_loss},
-    loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05, "single_model_*": 1},
+    loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss,
+          "single_model_1": locate_loss,
+          "single_model_2": locate_loss,
+          "single_model_3": locate_loss,
+          "single_model_4": locate_loss,
+          "single_model_5": locate_loss,
+          "single_model_6": locate_loss,
+          "single_model_7": locate_loss,
+          "single_model_8": locate_loss,
+          "single_model_9": locate_loss,},
+    loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05,
+                  "single_model_1": 1,
+                  "single_model_2": 1,
+                  "single_model_3": 1,
+                  "single_model_4": 1,
+                  "single_model_5": 1,
+                  "single_model_6": 1,
+                  "single_model_7": 1,
+                  "single_model_8": 1,
+                  "single_model_9": 1},
     optimizer=sgd_accu,
-    metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "single_model_*": locate_metric})
+    metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric,
+             "single_model_1": locate_metric,
+             "single_model_2": locate_metric,
+             "single_model_3": locate_metric,
+             "single_model_4": locate_metric,
+             "single_model_5": locate_metric,
+             "single_model_6": locate_metric,
+             "single_model_7": locate_metric,
+             "single_model_8": locate_metric,
+             "single_model_9": locate_metric,})
 
 print("compiled")
 
