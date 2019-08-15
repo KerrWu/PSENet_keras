@@ -1,5 +1,5 @@
 import os
-import tensorflow as tf
+import re
 from keras.utils import multi_gpu_model
 from keras import callbacks
 from PIL import ImageFile
@@ -23,7 +23,6 @@ steps_per_epoch_val = int(myModelConfig.num_val_examples_per_epoch // myModelCon
 train_gen = train_generator(myModelConfig.batch_size)
 valid_gen = valid_generator()
 
-
 siamese_model = PSENet(myModelConfig)
 
 print(siamese_model.input)
@@ -45,10 +44,11 @@ myTensorboard = callbacks.TensorBoard(log_dir=myModelConfig.summary_dir, histogr
 
 my_call_back = [my_early_stop, reduce_lr, myTensorboard]
 parallel_model.compile(
-    loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "single_model": locate_loss},
-    loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05, "single_model": 1},
+    loss={"scoreA": score_loss, "scoreB": score_loss, "scoreSiam": siam_loss, "single_model_*": locate_loss,
+          "single_model_1": locate_loss},
+    loss_weights={"scoreA": 0.1, "scoreB": 0.1, "scoreSiam": 0.05, "single_model_*": 1},
     optimizer=sgd_accu,
-    metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "single_model": locate_metric})
+    metrics={"scoreA": score_metric, "scoreB": score_metric, "scoreSiam": score_metric, "single_model_*": locate_metric})
 
 print("compiled")
 
