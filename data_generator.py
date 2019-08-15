@@ -974,7 +974,7 @@ def test_generator():
                 continue
 
             try:
-                score2_area = patient_dict[patient_name2][part_name2]["area"]
+                score2_area = patient_dict[patient_name2][part_name2]["area"]/10.0
             except:
                 score2_area = 0.0
 

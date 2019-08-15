@@ -6,9 +6,8 @@ from keras.layers import Input, Flatten, Dense, Dropout, Lambda, Conv2D, Add, Gl
     Concatenate, MaxPooling2D
 from keras import regularizers
 from SR_Module import score_refine_module
-from global_var import myModelConfig
-from keras import backend as K
-from keras.layers import Layer, Lambda
+from keras.layers import Layer, Lambda, BatchNormalization, Activation
+
 
 def combine_siamese_results(output_score_map_a, output_score_map_b):
     # 该函数输出5*3个值，A网络的5个分数，B网络的5个分数以及AB两网络的5个分数差距
@@ -28,6 +27,7 @@ def combine_siamese_results(output_score_map_a, output_score_map_b):
 
     return A_score, B_score, siamese_score
 
+
 def upsampleing(pair):
     deep = pair[0]
     shallow = pair[1]
@@ -35,12 +35,17 @@ def upsampleing(pair):
     deep_up = tf.image.resize_nearest_neighbor(deep, [shallow_shape[1], shallow_shape[2]])
     return deep_up
 
-def PSENet(myModelConfig):
 
+def PSENet(myModelConfig):
     # define single network
     with tf.device('/cpu:0'):
 
         image_input = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="single_input")
+
+        if keras.backend.image_data_format() == 'channels_last':
+            bn_axis = 3
+        else:
+            bn_axis = 1
 
         with tf.variable_scope("resnet50", reuse=tf.AUTO_REUSE):
             base_model = ResNet50(weights="imagenet", input_shape=(800, 1024, 3), input_tensor=image_input,
@@ -54,7 +59,6 @@ def PSENet(myModelConfig):
                 if hasattr(layer, 'bias_regularizer') and layer.use_bias:
                     layer.add_loss(keras.regularizers.l2(myModelConfig.weight_decay)(layer.bias))
 
-        with tf.variable_scope("FPN_SRM", reuse=tf.AUTO_REUSE):
             # p2 = base_model.get_layer("activation_10").output
             # p2_score_map, p2_locate_map = score_refine_module(p2, "p2")
 
@@ -63,56 +67,90 @@ def PSENet(myModelConfig):
             p4 = base_model.get_layer("activation_40").output
             p5 = base_model.get_layer("activation_49").output
 
-            p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+            p6 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(base_model.output)
-            p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+            p6 = BatchNormalization(axis=bn_axis, name='bn_p6_conv1')(p6)
+            p6 = Activation('relu')(p6)
+
+            p6 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
+            p6 = BatchNormalization(axis=bn_axis, name='bn_p6_conv2')(p6)
+            p6 = Activation('relu')(p6)
             p6 = MaxPooling2D(pool_size=(2, 2), padding='same')(p6)
 
-            p7 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
+            p7 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
-            p7 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
+            p7 = BatchNormalization(axis=bn_axis, name='bn_p7_conv1')(p7)
+            p7 = Activation('relu')(p7)
+            p7 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
                         kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p7)
+            p7 = BatchNormalization(axis=bn_axis, name='bn_p7_conv2')(p7)
+            p7 = Activation('relu')(p7)
             p7 = MaxPooling2D(pool_size=(2, 2), padding='same')(p7)
 
-            p7_up = Lambda(upsampleing)([p7, p6])
-            p6 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
-            p6_map = Add()([p6, p7_up])
-            p6 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6_map)
+            with tf.variable_scope("FPN_SRM", reuse=tf.AUTO_REUSE):
 
-            p6_up = Lambda(upsampleing)([p6, p5])
-            p5 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5)
-            p5_map = Add()([p5, p6_up])
-            p5 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5_map)
+                # P7+P6
+                p7_up = Lambda(upsampleing)([p7, p6])
+                p6 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6)
+                p6 = BatchNormalization(axis=bn_axis, name='bn_p6_reduce')(p6)
+                p6 = Activation('relu')(p6)
 
-            p5_up = Lambda(upsampleing)([p5, p4])
-            p4 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4)
-            p4_map =  Add()([p4, p5_up])
-            p4 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4_map)
+                p6_map = Add()([p6, p7_up])
+                p6 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p6_map)
+                p6 = BatchNormalization(axis=bn_axis, name='bn_p6_out')(p6)
+                p6 = Activation('relu')(p6)
 
-            p4_up = Lambda(upsampleing)([p4, p3])
-            p3 = Conv2D(256, (1, 1), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3)
-            p3_map = Add()([p3, p4_up])
-            p3 = Conv2D(256, (3, 3), padding='same', activation="relu", kernel_initializer='he_normal',
-                        kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3_map)
+                # P6+P5
+                p6_up = Lambda(upsampleing)([p6, p5])
+                p5 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5)
+                p5 = BatchNormalization(axis=bn_axis, name='bn_p5_reduce')(p5)
+                p6 = Activation('relu')(p5)
 
-            p3_score_map, p3_locate_map = score_refine_module(p3, "p3")
-            p4_score_map, p4_locate_map = score_refine_module(p4, "p4")
-            p5_score_map, p5_locate_map = score_refine_module(p5, "p5")
-            p6_score_map, p6_locate_map = score_refine_module(p6, "p6")
-            p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
+                p5_map = Add()([p5, p6_up])
+                p5 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p5_map)
+                p5 = BatchNormalization(axis=bn_axis, name='bn_p5_out')(p5)
+                p5 = Activation('relu')(p5)
 
+                # P5+P4
+                p5_up = Lambda(upsampleing)([p5, p4])
+                p4 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4)
+                p4 = BatchNormalization(axis=bn_axis, name='bn_p4_reduce')(p4)
+                p4 = Activation('relu')(p4)
+
+                p4_map = Add()([p4, p5_up])
+                p4 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p4_map)
+                p4 = BatchNormalization(axis=bn_axis, name='bn_p4_out')(p4)
+                p4 = Activation('relu')(p4)
+
+                # P4+P3
+                p4_up = Lambda(upsampleing)([p4, p3])
+                p3 = Conv2D(256, (1, 1), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3)
+                p3 = BatchNormalization(axis=bn_axis, name='bn_p3_reduce')(p3)
+                p3 = Activation('relu')(p3)
+
+                p3_map = Add()([p3, p4_up])
+                p3 = Conv2D(256, (3, 3), padding='same', kernel_initializer='he_normal',
+                            kernel_regularizer=regularizers.l2(myModelConfig.weight_decay))(p3_map)
+                p3 = BatchNormalization(axis=bn_axis, name='bn_p3_out')(p3)
+                p3 = Activation('relu')(p3)
+
+                p3_score_map, p3_locate_map = score_refine_module(p3, "p3")
+                p4_score_map, p4_locate_map = score_refine_module(p4, "p4")
+                p5_score_map, p5_locate_map = score_refine_module(p5, "p5")
+                p6_score_map, p6_locate_map = score_refine_module(p6, "p6")
+                p7_score_map, p7_locate_map = score_refine_module(p7, "p7")
 
         single_model = Model(inputs=image_input,
-                             outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map, p3_locate_map,
-                                      p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map])
+                             outputs=[p3_score_map, p4_score_map, p5_score_map, p6_score_map, p7_score_map,
+                                      p3_locate_map, p4_locate_map, p5_locate_map, p6_locate_map, p7_locate_map])
 
         # define siamese network
         input_a = Input(shape=(myModelConfig.img_height, myModelConfig.img_width, 3), name="input_a")
@@ -132,7 +170,6 @@ def PSENet(myModelConfig):
 
     output_list.extend(output_a[5:])
     output_list.extend(output_b[5:])
-    print(len(output_list))
 
     siamese_model = Model(inputs=[input_a, input_b], outputs=output_list, name="siamese")
 
