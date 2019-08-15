@@ -286,7 +286,7 @@ def train_generator(batch_size=1):
             for index, area in enumerate(part_area):
 
                 patient_name = patient_list[index].value
-                cur_area = part_area[index].value
+                cur_area = part_area[index].value/10.0
                 cur_ery = part_ery[index].value
                 cur_sca = part_sca[index].value
                 cur_ind = part_ind[index].value
@@ -430,7 +430,7 @@ def train_generator(batch_size=1):
                     continue
 
                 try:
-                    score1_area = patient_dict[patient_name1][part_name1]["area"] / 10.0
+                    score1_area = patient_dict[patient_name1][part_name1]["area"]
                 except:
                     print("area not in patient {}'s {} dict".format(patient_name1, part_name1))
                     score1_area = 0.0
