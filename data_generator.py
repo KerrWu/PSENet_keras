@@ -832,7 +832,7 @@ def valid_generator(batch_size=1):
                 _img1 = Image.open(img1)
 
                 try:
-                    img1, box1 = train_data_preprocessing(_img1, box1)
+                    img1, box1 = valid_data_preprocessing(_img1, box1)
                 except:
                     raise
 
@@ -891,7 +891,7 @@ def valid_generator(batch_size=1):
                 _img2 = Image.open(img2)
 
                 try:
-                    img2, box2 = train_data_preprocessing(_img2, box2)
+                    img2, box2 = valid_data_preprocessing(_img2, box2)
                 except:
                     raise
 
