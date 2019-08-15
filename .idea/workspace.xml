@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a1751443-34a3-4c71-8c2e-04277b1f5652" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_generator.py" afterPath="$PROJECT_DIR$/data_generator.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/train.py" afterPath="$PROJECT_DIR$/train.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-106">
-              <caret line="30" column="14" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="14" />
+            <state relative-caret-position="204">
+              <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -53,7 +53,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="data_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="228">
@@ -172,9 +172,9 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/self_callbacks.py" />
         <option value="$PROJECT_DIR$/SR_Module.py" />
-        <option value="$PROJECT_DIR$/train.py" />
         <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/data_generator.py" />
+        <option value="$PROJECT_DIR$/train.py" />
       </list>
     </option>
   </component>
@@ -692,16 +692,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-106">
-          <caret line="30" column="14" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="423">
@@ -726,6 +716,16 @@
             <element signature="e#3842#7147#0" expanded="false" />
             <element signature="e#7189#22614#0" expanded="false" />
             <element signature="e#38098#46354#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
