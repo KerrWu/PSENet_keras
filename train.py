@@ -1,4 +1,5 @@
 import os
+import tensorflow as tf
 from keras.utils import multi_gpu_model
 from keras import callbacks
 from PIL import ImageFile
@@ -29,7 +30,8 @@ print(siamese_model.output)
 siamese_model.summary()
 
 # parallel_model = siamese_model
-parallel_model = multi_gpu_model(siamese_model, gpus=myModelConfig.num_gpus)
+with tf.device("/cpu:0"):
+    parallel_model = multi_gpu_model(siamese_model, gpus=myModelConfig.num_gpus)
 
 sgd_accu = SGDAccumulate(lr=myModelConfig.learning_rate, momentum=myModelConfig.momentum, nesterov=True,
                          accum_iters=myModelConfig.accu_num)
