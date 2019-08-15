@@ -23,8 +23,8 @@ steps_per_epoch_val = int(myModelConfig.num_val_examples_per_epoch // myModelCon
 train_gen = train_generator(myModelConfig.batch_size)
 valid_gen = valid_generator()
 
-with tf.device("/cpu:0"):
-    siamese_model = PSENet(myModelConfig)
+
+siamese_model = PSENet(myModelConfig)
 
 print(siamese_model.input)
 print(siamese_model.output)
