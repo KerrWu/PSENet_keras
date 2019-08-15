@@ -330,7 +330,7 @@ def train_generator(batch_size=1):
     with open(train_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
-            patient_list.append(line)
+            train_patient_list.append(line)
     train_patient_list = [elem for elem in train_patient_list if os.path.isdir(os.path.join(root_dir, elem))]
 
     img_list = []
