@@ -1,9 +1,7 @@
 import os
-import re
 from keras.utils import multi_gpu_model
 from keras import callbacks
 from PIL import ImageFile
-
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import matplotlib.pyplot as plt
 
@@ -11,18 +9,20 @@ plt.switch_backend('agg')
 
 from global_var import myModelConfig
 from model import PSENet
-from data_generator import train_generator, valid_generator, build_patient_dict
+from data_generator import pasi_data
 from loss_metric import score_loss, siam_loss, locate_loss, score_metric, locate_metric
 from self_callbacks import MyEarlyStop
 from acc_opt import SGDAccumulate
+
+global patient_dict
 
 os.environ["CUDA_VISIBLE_DEVICES"] = myModelConfig.availiable_gpus
 steps_per_epoch_train = int(myModelConfig.num_train_examples_per_epoch // myModelConfig.batch_size)
 steps_per_epoch_val = int(myModelConfig.num_val_examples_per_epoch // myModelConfig.batch_size)
 
-patient_dict = build_patient_dict()
-train_gen = train_generator(myModelConfig.batch_size)
-valid_gen = valid_generator(myModelConfig.batch_size)
+data_loader = pasi_data()
+train_gen = data_loader.train_generator(myModelConfig.batch_size)
+valid_gen = data_loader.valid_generator(myModelConfig.batch_size)
 
 siamese_model = PSENet(myModelConfig)
 
