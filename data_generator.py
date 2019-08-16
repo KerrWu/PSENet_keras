@@ -320,9 +320,10 @@ def build_patient_dict():
                 except:
                     continue
 
-patient_dict = build_patient_dict()
 
 def train_generator(batch_size=1):
+
+    global patient_dict
 
     root_dir = myModelConfig.data_root
     train_file = myModelConfig.train_txt_file
@@ -616,6 +617,8 @@ def train_generator(batch_size=1):
 
 
 def valid_generator(batch_size=1):
+
+    global patient_dict
 
     root_dir = myModelConfig.data_root
     val_file = myModelConfig.val_txt_file
