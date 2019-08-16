@@ -326,6 +326,8 @@ class pasi_data():
                     except:
                         continue
 
+        return patient_dict
+
 
     def train_generator(self, batch_size=1):
 
