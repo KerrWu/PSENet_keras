@@ -4,9 +4,7 @@
 
 ## Introduction
 
-source for PSENet - Psoriasis Severity Evaluation Network
-
-submitted to ICDM 2019
+source for PSENet - Psoriasis Severity Evaluation Network, AAAI-2020
 
 
 
